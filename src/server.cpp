@@ -10,6 +10,7 @@ server::server(const char *port) {
 
     // resolve port to a 'sockaddr*' for a TCP server
     addrinfo *res, hints{};
+    hints.ai_family = AF_INET;
     hints.ai_flags = AI_PASSIVE;
     hints.ai_socktype = SOCK_STREAM;
     int rv = getaddrinfo(nullptr, port, &hints, &res);
@@ -30,6 +31,8 @@ server::server(const char *port) {
     // enter listening mode
     if (listen(_fd, 1))
         error(1, errno, "listen failed");
+
+    freeaddrinfo(res);
 }
 
 int server::fd() const {return _fd;}
