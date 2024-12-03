@@ -5,14 +5,13 @@
 #include <netdb.h>
 #include <cerrno>
 
-server::server(int argc, const char *const *argv) {
-    if (argc != 2) error(1, 0, "Usage: %s <port>", argv[0]);
+server::server(const char *port) {
 
     // resolve port to a 'sockaddr*' for a TCP server
     addrinfo *res, hints{};
     hints.ai_flags = AI_PASSIVE;
     hints.ai_socktype = SOCK_STREAM;
-    int rv = getaddrinfo(nullptr, argv[1], &hints, &res);
+    int rv = getaddrinfo(nullptr, port, &hints, &res);
     if (rv) error(1, 0, "getaddrinfo: %s", gai_strerror(rv));
 
     // create socket

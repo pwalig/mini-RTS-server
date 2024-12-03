@@ -8,6 +8,6 @@ private:
     std::unordered_set<int> clientFds;
 
 public:
-    server(int argc, const char *const *argv);
+    server(const char *port);
     ~server();
 };
