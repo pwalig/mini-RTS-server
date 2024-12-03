@@ -1,4 +1,8 @@
 #pragma once
+#include <string>
+#include <string.h>
+#include <cstdio>
+#include <cstdlib> // exit
 
 template <typename... Args> /* This mimics GNU 'error' function */
 inline void error(int status, int errnum, const char *format, Args... args) {

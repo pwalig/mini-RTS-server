@@ -9,5 +9,7 @@ private:
 
 public:
     server(const char *port);
+    int fd() const;
+    void newClient();
     ~server();
 };
