@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include <string.h>
-#include <cstdio>
+#include <string.h> // strerror
+#include <cstdio> // fprintf
 #include <cstdlib> // exit
 
 template <typename... Args> /* This mimics GNU 'error' function */
