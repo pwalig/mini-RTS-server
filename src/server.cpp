@@ -1,11 +1,13 @@
 #include "server.h"
-#include "error.h"
+
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <cerrno>
 #include <stdio.h>
+#include <sys/epoll.h>
 
+#include "error.h"
 #include "client.h"
 
 server::server(const char *port) {
@@ -35,12 +37,35 @@ server::server(const char *port) {
         error(1, errno, "listen failed");
 
     freeaddrinfo(res);
+
+    // create epoll
+    _epollFd = epoll_create1(0);
+
+    epoll_event ee;
+    ee.events = EPOLLIN;
+    ee.data.ptr = this;
+
+    rv = epoll_ctl(_epollFd, EPOLL_CTL_ADD, _fd, &ee);
+    if (rv) perror("epoll_ctl failed");
 }
 
 int server::fd() const {return _fd;}
 
 void server::newClient() {
     clients.insert(new client(this));
+}
+
+void server::loop(){
+    epoll_event ee;
+    while (true)
+    {
+        int ready = epoll_wait(_epollFd, &ee, 1, -1);
+        if (ready != 1) continue;
+        if (ee.data.ptr == this){
+            newClient();
+        }
+    }
+    
 }
 
 server::~server() {

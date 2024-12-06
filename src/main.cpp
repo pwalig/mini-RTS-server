@@ -11,18 +11,17 @@ void cleanup(){
 
 void ctrl_c(int){
     cleanup();
+    exit(0);
 }
 
 int main(int argc, char** argv){
     if (argc != 2) error(1, 0, "Usage: %s <port>", argv[0]);
 
-    // signal(SIGINT, ctrl_c);
+    signal(SIGINT, ctrl_c);
 
     server_ = new server(argv[1]);
 
-    while (true) {
-        server_->newClient();
-    }
+    server_->loop();
 
     cleanup();
     return 0;
