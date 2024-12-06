@@ -7,7 +7,7 @@ class server;
 class client {
 private:
     int _fd;
-    server* owner;
+    server* owner; // server to which this client is connected to
 
     static const unsigned long bufsiz;
     std::vector<char> buffer;
@@ -23,8 +23,17 @@ public:
     epoll_event inEvent();
     epoll_event inoutEvent();
 
+    // @brief copies data to buffer and sets servers' epoll to wait for EPOLLOUT event.
+    // @param data data to be copied to buffer and later sent to client
     void sendToClient(const std::vector<char>& data);
+
+    // @brief sends to client whatever is left in buffer. Should be a reaction to EPOLLOUT event.
     void sendFromBuffer();
+    
+    // @brief Reads data from client socket.
+    // Can also detect if client has disconnected.
+    // In such case informs the server (calls server::removeClient -> erases client from set of clients and deletes the client)
+    // @return the read data or empty vector if client disconnected
     std::vector<char> receive();
 
     ~client();

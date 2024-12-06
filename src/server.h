@@ -21,9 +21,15 @@ public:
 
     int fd() const;
     int epollFd() const;
+
+    // @brief allocates new client and inserts pointer to new client to set of clients
     void newClient();
+
+    // @brief erases client from set of clients and deletes the client
     void removeClient(client* client_);
+
     void loop();
     void sendToAll(const std::vector<char>& data);
+    
     ~server();
 };
