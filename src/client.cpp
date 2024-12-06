@@ -56,6 +56,7 @@ void client::sendFromBuffer(){
         buffer.clear();
         epoll_event ee = inEvent();
         epoll_ctl(owner->epollFd(), EPOLL_CTL_MOD, _fd, &ee); // remove EPOLLOUT event
+        return;
     }
     buffer.erase(buffer.begin(), buffer.begin() + n);
 }

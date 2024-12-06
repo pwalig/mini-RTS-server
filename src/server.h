@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_set>
+#include <vector>
 
 class client;
 
@@ -17,5 +18,6 @@ public:
     void newClient();
     void removeClient(client* client_);
     void loop();
+    void sendToAll(const std::vector<char>& data);
     ~server();
 };

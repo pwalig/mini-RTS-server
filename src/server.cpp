@@ -70,6 +70,8 @@ void server::loop(){
         if (ready != 1) continue;
         if (ee.data.ptr == nullptr){
             newClient();
+            char msg[7] = "Hello\n";
+            sendToAll(std::vector<char>(msg, msg + 7));
         }
         else {
             client* client_ = (client*)(ee.data.ptr);
@@ -83,6 +85,12 @@ void server::loop(){
         }
     }
     
+}
+
+void server::sendToAll(const std::vector<char>& data){
+    for (client* cli : clients){
+        cli->sendToClient(data);
+    }
 }
 
 server::~server() {
