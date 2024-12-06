@@ -6,6 +6,7 @@ class server;
 class client {
 private:
     int _fd;
+    server* owner;
     std::vector<char> buffer;
 public:
     client(server* server_);
@@ -15,7 +16,8 @@ public:
     client& operator=(const client& other) = delete;
     client& operator=(client&& other) = delete;
 
+    int fd() const;
     void send(const std::vector<char>& data);
-    
+
     ~client();
 };

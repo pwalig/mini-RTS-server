@@ -13,6 +13,7 @@ private:
 public:
     server(const char *port);
     int fd() const;
+    int epollFd() const;
     void newClient();
     void loop();
     ~server();

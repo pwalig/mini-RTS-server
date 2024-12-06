@@ -43,13 +43,15 @@ server::server(const char *port) {
 
     epoll_event ee;
     ee.events = EPOLLIN;
-    ee.data.ptr = this;
+    ee.data.ptr = nullptr;
 
     rv = epoll_ctl(_epollFd, EPOLL_CTL_ADD, _fd, &ee);
     if (rv) perror("epoll_ctl failed");
 }
 
 int server::fd() const {return _fd;}
+
+int server::epollFd() const {return _epollFd;}
 
 void server::newClient() {
     clients.insert(new client(this));
@@ -61,8 +63,20 @@ void server::loop(){
     {
         int ready = epoll_wait(_epollFd, &ee, 1, -1);
         if (ready != 1) continue;
-        if (ee.data.ptr == this){
+        if (ee.data.ptr == nullptr){
             newClient();
+        }
+        else {
+            client* client_ = (client*)(ee.data.ptr);
+            char buf[256];
+            int r = recv(client_->fd(), buf, 256, 0);
+            if (r == 0) {
+                clients.erase(client_);
+                delete client_;
+            }
+            else {
+                write(0, buf, r);
+            }
         }
     }
     

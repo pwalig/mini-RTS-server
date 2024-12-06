@@ -10,6 +10,7 @@ void cleanup(){
 }
 
 void ctrl_c(int){
+    printf("\n");
     cleanup();
     exit(0);
 }
