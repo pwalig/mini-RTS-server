@@ -57,6 +57,11 @@ void server::newClient() {
     clients.insert(new client(this));
 }
 
+void server::removeClient(client* client_){
+    clients.erase(client_);
+    delete client_;
+}
+
 void server::loop(){
     epoll_event ee;
     while (true)
@@ -68,15 +73,8 @@ void server::loop(){
         }
         else {
             client* client_ = (client*)(ee.data.ptr);
-            char buf[256];
-            int r = recv(client_->fd(), buf, 256, 0);
-            if (r == 0) {
-                clients.erase(client_);
-                delete client_;
-            }
-            else {
-                write(0, buf, r);
-            }
+            std::vector<char> data = client_->receive();
+            write(0, data.data(), data.size());
         }
     }
     

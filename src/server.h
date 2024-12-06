@@ -15,6 +15,7 @@ public:
     int fd() const;
     int epollFd() const;
     void newClient();
+    void removeClient(client* client_);
     void loop();
     ~server();
 };

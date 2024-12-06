@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <sys/epoll.h>
 
+const unsigned long client::bufsiz = 256;
+
 client::client(server* server_) : owner(server_){
     sockaddr_storage clientAddr{0};
     socklen_t clientAddrSize = sizeof(clientAddr);
@@ -31,6 +33,29 @@ int client::fd() const {return _fd;}
 
 void client::send(const std::vector<char>& data) {
     int n = write(_fd, data.data(), data.size());
+}
+
+std::vector<char> client::receive() {
+    std::vector<char> out;
+    
+    out.resize(bufsiz);
+    int r = recv(_fd, out.data(), bufsiz, 0);
+    if (r >= 0) out.resize(r);
+
+    if (r == 0) {
+        owner->removeClient(this);
+        return out;
+    }
+
+    while (r > 0)
+    {
+        unsigned long s = out.size();
+        out.resize(s + bufsiz);
+        r = recv(_fd, out.data() + s, bufsiz, MSG_DONTWAIT);
+        if (r >= 0) out.resize(s + r);
+    }
+
+    return out;
 }
 
 client::~client() {

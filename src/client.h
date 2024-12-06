@@ -7,6 +7,8 @@ class client {
 private:
     int _fd;
     server* owner;
+
+    static const unsigned long bufsiz;
     std::vector<char> buffer;
 public:
     client(server* server_);
@@ -18,6 +20,7 @@ public:
 
     int fd() const;
     void send(const std::vector<char>& data);
+    std::vector<char> receive();
 
     ~client();
 };
