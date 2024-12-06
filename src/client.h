@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <sys/epoll.h>
 
 class server;
 
@@ -19,7 +20,11 @@ public:
     client& operator=(client&& other) = delete;
 
     int fd() const;
-    void send(const std::vector<char>& data);
+    epoll_event inEvent();
+    epoll_event inoutEvent();
+
+    void sendToClient(const std::vector<char>& data);
+    void sendFromBuffer();
     std::vector<char> receive();
 
     ~client();
