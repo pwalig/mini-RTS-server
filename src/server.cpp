@@ -6,6 +6,8 @@
 #include <cerrno>
 #include <stdio.h>
 
+#include "client.h"
+
 server::server(const char *port) {
 
     // resolve port to a 'sockaddr*' for a TCP server
@@ -38,29 +40,12 @@ server::server(const char *port) {
 int server::fd() const {return _fd;}
 
 void server::newClient() {
-    sockaddr_storage clientAddr{0};
-    socklen_t clientAddrSize = sizeof(clientAddr);
-
-    // accept new connection
-    auto clientFd = accept(_fd, (sockaddr *)&clientAddr, &clientAddrSize);
-    if (clientFd == -1)
-        perror("accept failed");
-
-    // add client to all clients set
-    clientFds.insert(clientFd);
-
-    // tell who has connected
-    char host[NI_MAXHOST], port[NI_MAXSERV];
-    getnameinfo((sockaddr *)&clientAddr, clientAddrSize, host, NI_MAXHOST, port, NI_MAXSERV, 0);
-    printf("new connection from: %s:%s (fd: %d)\n", host, port, clientFd);
+    clients.insert(new client(this));
 }
 
 server::~server() {
-    for (int clientFd : clientFds) {
-        shutdown(clientFd, SHUT_RDWR);
-        // note that if the message cannot be sent out immediately,
-        // it will be discarded upon 'close'
-        close(clientFd); 
+    for (client* cli : clients){
+        delete cli;
     }
     close(_fd);
 }
