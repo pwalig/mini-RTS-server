@@ -22,7 +22,10 @@ int main(int argc, char** argv){
 
     server_ = new server(argv[1]);
 
-    server_->loop();
+    server_->loop([](){
+        char msg[8] = "update\n";
+        server_->sendToAll(std::vector<char>(msg, msg + 8));
+    }, 1000);
 
     cleanup();
     return 0;

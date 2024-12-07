@@ -6,6 +6,7 @@
 #include <cerrno>
 #include <stdio.h>
 #include <sys/epoll.h>
+#include <chrono>
 
 #include "error.h"
 #include "client.h"
@@ -62,26 +63,37 @@ void server::removeClient(client* client_){
     delete client_;
 }
 
-void server::loop(){
+void server::loop(const std::function<void()>& interrupt, const int& millis){
     epoll_event ee;
+    int remaining = millis;
     while (true)
     {
-        int ready = epoll_wait(_epollFd, &ee, 1, -1);
-        if (ready != 1) continue;
-        if (ee.data.ptr == nullptr){
-            newClient();
-            char msg[7] = "Hello\n";
-            sendToAll(std::vector<char>(msg, msg + 7));
+        auto begin = std::chrono::steady_clock::now();
+        int ready = epoll_wait(_epollFd, &ee, 1, remaining);
+        if (ready == 1) {
+            if (ee.data.ptr == nullptr){
+                newClient();
+            }
+            else {
+                client* client_ = (client*)(ee.data.ptr);
+                if (ee.events & EPOLLIN) {
+                    std::vector<char> data = client_->receive();
+                    write(0, data.data(), data.size());
+                }
+                if (ee.events & EPOLLOUT) {
+                    client_->sendFromBuffer();
+                }
+            }
         }
-        else {
-            client* client_ = (client*)(ee.data.ptr);
-            if (ee.events & EPOLLIN) {
-                std::vector<char> data = client_->receive();
-                write(0, data.data(), data.size());
-            }
-            if (ee.events & EPOLLOUT) {
-                client_->sendFromBuffer();
-            }
+        auto end = std::chrono::steady_clock::now();
+        remaining -= std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+
+        if (remaining <= 0) {
+            auto begin = std::chrono::steady_clock::now();
+            interrupt();
+            remaining = millis;
+            auto end = std::chrono::steady_clock::now();
+            remaining -= std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
         }
     }
     

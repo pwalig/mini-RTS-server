@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <vector>
+#include <functional>
 
 class client;
 
@@ -28,7 +29,9 @@ public:
     // @brief erases client from set of clients and deletes the client
     void removeClient(client* client_);
 
-    void loop();
+    // @param interrupt function to be called at constant interval
+    // @param millis time interval in milliseconds, dictating how often to call interrupt function
+    void loop(const std::function<void()>& interrupt = [](){}, const int& millis = -1);
     void sendToAll(const std::vector<char>& data);
     
     ~server();
