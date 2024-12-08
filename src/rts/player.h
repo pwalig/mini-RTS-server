@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "client.h"
+#include "../net/client.h"
 
 namespace rts {
     class player {

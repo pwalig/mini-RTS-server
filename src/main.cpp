@@ -1,5 +1,5 @@
-#include "server.h"
-#include "error.h"
+#include "net/server.h"
+#include "net/error.h"
 #include <signal.h>
 
 server* server_;

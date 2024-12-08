@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <functional>
 #include <sys/epoll.h>
 
 class server;
@@ -18,6 +19,9 @@ public:
     client(client&& other) = delete;
     client& operator=(const client& other) = delete;
     client& operator=(client&& other) = delete;
+
+    std::function<void(const std::vector<char>&)> onReceive = [](const std::vector<char>&){};
+    std::function<void()> onDisconnect = [](){};
 
     int fd() const;
     epoll_event inEvent();

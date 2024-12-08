@@ -69,6 +69,7 @@ std::vector<char> client::receive() {
     if (r >= 0) out.resize(r);
 
     if (r == 0) {
+        onDisconnect();
         owner->removeClient(this);
         return out;
     }
@@ -80,7 +81,8 @@ std::vector<char> client::receive() {
         r = recv(_fd, out.data() + s, bufsiz, MSG_DONTWAIT);
         if (r >= 0) out.resize(s + r);
     }
-
+    
+    onReceive(out);
     return out;
 }
 
