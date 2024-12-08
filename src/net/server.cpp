@@ -67,7 +67,7 @@ void server::removeClient(client* client_){
     delete client_;
 }
 
-void server::loop(const std::function<void()>& interrupt, const int& millis){
+void server::loop(const int& millis){
     epoll_event ee;
     int remaining = millis;
     while (true)
@@ -94,7 +94,7 @@ void server::loop(const std::function<void()>& interrupt, const int& millis){
 
         if (remaining <= 0) {
             auto begin = std::chrono::steady_clock::now();
-            interrupt();
+            loopLogic();
             remaining = millis;
             auto end = std::chrono::steady_clock::now();
             remaining -= std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();

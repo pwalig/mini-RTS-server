@@ -45,7 +45,7 @@ void client::sendToClient(const std::vector<char>& data) {
     epoll_event ee = inoutEvent();
     epoll_ctl(owner->epollFd(), EPOLL_CTL_MOD, _fd, &ee);
 
-    buffer = data;
+    buffer.insert(buffer.end(), data.begin(), data.end());
 }
 
 void client::sendFromBuffer(){
@@ -80,6 +80,7 @@ std::vector<char> client::receive() {
         out.resize(s + bufsiz);
         r = recv(_fd, out.data() + s, bufsiz, MSG_DONTWAIT);
         if (r >= 0) out.resize(s + r);
+        else out.resize(s);
     }
     
     onReceive(out);

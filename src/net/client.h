@@ -24,8 +24,8 @@ public:
     std::function<void()> onDisconnect = [](){};
 
     int fd() const;
-    epoll_event inEvent();
-    epoll_event inoutEvent();
+    epoll_event inEvent(); // non const because epoll_event::data::ptr is not const
+    epoll_event inoutEvent(); // non const because epoll_event::data::ptr is not const
 
     // @brief copies data to buffer and sets servers' epoll to wait for EPOLLOUT event.
     // @param data data to be copied to buffer and later sent to client

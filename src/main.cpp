@@ -1,13 +1,14 @@
-#include "net/server.h"
+#include "rts/game.h"
 #include "net/error.h"
 #include "msg/handler.h"
 #include <signal.h>
 
-server* server_;
+rts::game* game_;
 
 void cleanup(){
-    if (server_)
-        delete server_;
+    if (game_)
+        delete game_;
+        
 }
 
 void ctrl_c(int){
@@ -23,12 +24,9 @@ int main(int argc, char** argv){
 
     message::handler::init();
 
-    server_ = new server(argv[1]);
+    game_ = new rts::game(argv[1]);
 
-    server_->loop([](){
-        char msg[8] = "update\n";
-        server_->sendToAll(std::vector<char>(msg, msg + 8));
-    }, 1000);
+    game_->run();
 
     cleanup();
     return 0;

@@ -7,19 +7,25 @@
 #include "../msg/handler.h"
 
 namespace rts {
+    class game;
+
     class player {
     private:
-        client* _client;
+        game* _game;
         message::handler mh;
         std::string _name = "";
 
         void handleNewMessage(const message::base* msg);
 
         static std::unordered_map<std::string, player*> playersByName;
+        static void removeName(const std::string& name);
     public:
-        player(client* client_);
+        client* _client;
+
+        player(game* game_, client* client_);
         void name(const std::string& name);
         void reName(const std::string& name);
         static bool nameTaken(const std::string& name);
+        ~player();
     };
 }

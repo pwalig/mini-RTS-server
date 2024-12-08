@@ -3,7 +3,7 @@
 namespace message
 {
     enum class type {
-        name, move, attack, mine, getBoard, getPlayers, invalid
+        name, move, attack, mine, getBoard, getPlayers, invalid, disconnect
     };
 
     class base {
