@@ -26,11 +26,11 @@ void rts::game::run() {
 void rts::game::tryJoin(player* pl){
     if (activePlayers.size() < maxPlayers) {
         activePlayers.insert(pl);
-        pl->_client->sendToClient({'a', '\n'});
+        pl->_client->sendToClient({'a', '\n'}); // joined active group
     }
     else {
         queuedPlayers.push_back(pl);
-        pl->_client->sendToClient({'q', '\n'});
+        pl->_client->sendToClient({'q', '\n'}); // put into queue
     }
 }
 

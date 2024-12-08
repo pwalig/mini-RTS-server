@@ -15,12 +15,10 @@ message::handler::handler(client* client_) : _client(client_) {
 }
 
 void message::handler::handle(const std::vector<char>& stream) {
-    printf("stream: %d\n", (int)stream.size());
     buffer.insert(buffer.end(), stream.begin(), stream.end()); // append stream to buffer
 
     while (!buffer.empty())
     {
-        printf("buff: %d\n", (int)buffer.size());
         
         if (msgType == '?') {
             msgType = buffer[0];
@@ -28,7 +26,6 @@ void message::handler::handle(const std::vector<char>& stream) {
         }
 
         if (messageProcessors.find(msgType) == messageProcessors.end()){
-            printf("invalid: %c\n", msgType);
             message::base msg(type::invalid);
             onNewMessage(&msg);
             msgType = '?';
@@ -41,7 +38,6 @@ void message::handler::handle(const std::vector<char>& stream) {
 
 void message::handler::init(){
     messageProcessors['n'] = [](message::handler* mh){
-        printf("name process attempt\n");
         std::string name;
         unsigned long i = 0;
         while (i < mh->buffer.size() && mh->buffer[i] != '\n')

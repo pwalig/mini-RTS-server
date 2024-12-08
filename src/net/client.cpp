@@ -1,15 +1,12 @@
 #include "client.h"
-#include <netdb.h>
 #include "error.h"
 #include "server.h"
 #include <unistd.h>
-#include <sys/socket.h>
+#include <netdb.h>
 
 const unsigned long client::bufsiz = 256;
 
-client::client(server* server_) : owner(server_){
-    sockaddr_storage clientAddr{0};
-    socklen_t clientAddrSize = sizeof(clientAddr);
+client::client(server* server_) : owner(server_), clientAddrSize(sizeof(clientAddr)) {
 
     // accept new connection
     _fd = accept(server_->fd(), (sockaddr *)&clientAddr, &clientAddrSize);
@@ -17,9 +14,9 @@ client::client(server* server_) : owner(server_){
         perror("accept failed");
 
     // tell who has connected
-    char host[NI_MAXHOST], port[NI_MAXSERV];
-    getnameinfo((sockaddr *)&clientAddr, clientAddrSize, host, NI_MAXHOST, port, NI_MAXSERV, 0);
-    printf("new connection from: %s:%s (fd: %d)\n", host, port, _fd);
+    printf("new connection from: ");
+    printName();
+    printf("\n");
 
     // add to epoll
     epoll_event ee = inEvent();
@@ -27,6 +24,30 @@ client::client(server* server_) : owner(server_){
 }
 
 int client::fd() const {return _fd;}
+
+std::string client::host() const {
+    std::string host;
+    name(&host, nullptr);
+    return host;
+}
+
+unsigned int client::port() const {
+    unsigned int port;
+    name(nullptr, &port);
+    return port;
+}
+
+void client::name(std::string* host, unsigned int* port) const {
+    char host_[NI_MAXHOST], port_[NI_MAXSERV];
+    getnameinfo((sockaddr *)&clientAddr, clientAddrSize, host_, NI_MAXHOST, port_, NI_MAXSERV, 0);
+    if (host) *host = std::string(host_);
+    if (port) *port = stoi(std::string(port_));
+}
+
+void client::printName() const {
+    std::string host_ = host();
+    printf("%s:%d (fd: %d)", host_.c_str(), port(), _fd);
+}
 
 epoll_event client::inEvent() {
     epoll_event ee;
@@ -91,5 +112,7 @@ client::~client() {
     epoll_ctl(owner->epollFd(), EPOLL_CTL_DEL, _fd, nullptr);
     shutdown(_fd, SHUT_RDWR);
     close(_fd);
-    printf("closed client (fd: %d)\n", _fd);
+    printf("closed client ");
+    printName();
+    printf("\n");
 }
