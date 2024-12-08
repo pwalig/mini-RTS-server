@@ -36,7 +36,7 @@ public:
     void sendToAll(const std::vector<char>& data);
 
     // @brief erases client from set of clients and deletes the client
-    void removeClient(client* client_);
+    void deleteClient(client* client_);
     
     ~server();
 };

@@ -61,7 +61,7 @@ client* server::newClient() {
     return client_;
 }
 
-void server::removeClient(client* client_){
+void server::deleteClient(client* client_){
     onRemoveClient(client_);
     clients.erase(client_);
     delete client_;

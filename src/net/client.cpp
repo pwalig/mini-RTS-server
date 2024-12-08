@@ -91,7 +91,7 @@ std::vector<char> client::receive() {
 
     if (r == 0) {
         onDisconnect();
-        owner->removeClient(this);
+        owner->deleteClient(this);
         return out;
     }
 
