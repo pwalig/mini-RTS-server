@@ -38,6 +38,7 @@ public:
     // Can also detect if client has disconnected.
     // In such case informs the server (calls server::removeClient -> erases client from set of clients and deletes the client)
     // @return the read data or empty vector if client disconnected
+    // @note using vector here instead of deque because deque has no member data()
     std::vector<char> receive();
 
     ~client();
