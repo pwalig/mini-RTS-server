@@ -54,11 +54,15 @@ int server::fd() const {return _fd;}
 
 int server::epollFd() const {return _epollFd;}
 
-void server::newClient() {
-    clients.insert(new client(this));
+client* server::newClient() {
+    client* client_ = new client(this);
+    clients.insert(client_);
+    onNewClient(client_);
+    return client_;
 }
 
 void server::removeClient(client* client_){
+    onRemoveClient(client_);
     clients.erase(client_);
     delete client_;
 }

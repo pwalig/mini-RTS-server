@@ -20,11 +20,14 @@ public:
     server& operator=(const server& other) = delete;
     server& operator=(server&& other) = delete;
 
+    std::function<void(client*)> onNewClient = [](client*){};
+    std::function<void(client*)> onRemoveClient = [](client*){};
+
     int fd() const;
     int epollFd() const;
 
     // @brief allocates new client and inserts pointer to new client to set of clients
-    void newClient();
+    client* newClient();
 
     // @brief erases client from set of clients and deletes the client
     void removeClient(client* client_);
@@ -32,6 +35,7 @@ public:
     // @param interrupt function to be called at constant interval
     // @param millis time interval in milliseconds, dictating how often to call interrupt function
     void loop(const std::function<void()>& interrupt = [](){}, const int& millis = -1);
+    
     void sendToAll(const std::vector<char>& data);
     
     ~server();
