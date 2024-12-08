@@ -15,7 +15,7 @@ void rts::game::loopLogic(){
     std::vector<char> buff(msg, msg + 8);
 
     for (player* p : activePlayers){
-        p->_client->sendToClient(buff);
+        p->getClient()->sendToClient(buff);
     }
 }
 
@@ -26,11 +26,11 @@ void rts::game::run() {
 void rts::game::tryJoin(player* pl){
     if (activePlayers.size() < maxPlayers) {
         activePlayers.insert(pl);
-        pl->_client->sendToClient({'a', '\n'}); // joined active group
+        pl->getClient()->sendToClient({'a', '\n'}); // joined active group
     }
     else {
         queuedPlayers.push_back(pl);
-        pl->_client->sendToClient({'q', '\n'}); // put into queue
+        pl->getClient()->sendToClient({'q', '\n'}); // put into queue
     }
 }
 

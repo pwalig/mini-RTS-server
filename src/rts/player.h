@@ -14,18 +14,23 @@ namespace rts {
         game* _game;
         message::handler mh;
         std::string _name = "";
+        client* _client;
 
         void handleNewMessage(const message::base* msg);
+        
+        void setName(const std::string& name);
+        void reName(const std::string& name);
 
         static std::unordered_map<std::string, player*> playersByName;
         static void removeName(const std::string& name);
-    public:
-        client* _client;
 
+    public:
         player(game* game_, client* client_);
-        void name(const std::string& name);
-        void reName(const std::string& name);
-        static bool nameTaken(const std::string& name);
         ~player();
+
+        client* getClient() const;
+        std::string getName() const;
+
+        static bool nameTaken(const std::string& name);
     };
 }

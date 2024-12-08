@@ -20,12 +20,6 @@ private:
     // @brief allocates new client and inserts pointer to new client to set of clients
     client* newClient();
 
-    // @brief erases client from set of clients and deletes the client
-    void removeClient(client* client_);
-    
-    int fd() const;
-    int epollFd() const;
-
 public:
     server(const char *port);
 
@@ -36,9 +30,13 @@ public:
     // @param millis time interval in milliseconds, dictating how often to interrupt polling with logic funcion
     void loop(const int& millis = -1);
     
+    int fd() const;
+    int epollFd() const;
+    
     void sendToAll(const std::vector<char>& data);
 
-    friend class client;
+    // @brief erases client from set of clients and deletes the client
+    void removeClient(client* client_);
     
     ~server();
 };

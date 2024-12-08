@@ -21,7 +21,7 @@ void rts::player::handleNewMessage(const message::base* msg) {
         if (cmsg->_name != _name && nameTaken(cmsg->_name)) { // other player has that name
             _client->sendToClient({'n', '\n'}); // name taken
         }
-        else if (_name == "") name(cmsg->_name);
+        else if (_name == "") setName(cmsg->_name);
         else reName(cmsg->_name);
     }
     else if (msg->typ == message::type::invalid) {
@@ -32,12 +32,13 @@ void rts::player::handleNewMessage(const message::base* msg) {
     }
 }
 
-void rts::player::name(const std::string& name) {
+void rts::player::setName(const std::string& name) {
     assert(playersByName.find(name) == playersByName.end());
     _name = name;
     playersByName.insert({_name, this});
     _client->printName();
     printf(" named self: %s\n", _name.c_str());
+    _game->tryJoin(this);
 }
 
 void rts::player::reName(const std::string& name) {
@@ -47,6 +48,10 @@ void rts::player::reName(const std::string& name) {
     playersByName.insert({_name, this});
     _client->sendToClient({'y', '\n'}); // rename succesfull
 }
+
+std::string rts::player::getName() const { return _name; }
+
+client* rts::player::getClient() const { return _client; }
 
 void rts::player::removeName(const std::string& name) {
     assert(playersByName.find(name) != playersByName.end());
