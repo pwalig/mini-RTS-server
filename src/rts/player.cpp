@@ -75,6 +75,10 @@ void rts::player::removeAllUnits(){
     units.clear();
 }
 
+void rts::player::newUnit(field* field_){
+    units.insert(new unit(this, field_));
+}
+
 rts::player::~player(){
     removeAllUnits();
     if (_name != "") removeName(_name);

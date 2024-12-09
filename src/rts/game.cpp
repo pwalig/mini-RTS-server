@@ -27,7 +27,7 @@ void rts::game::loopLogic(){
 void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
     activePlayers.insert(pl);
-    pl->units.insert(new unit(pl, _board.randomEmptyField(true))); // add first unit for the player to control
+    pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
     pl->getClient()->sendToClient({'a'}); // joined active group
 }
 

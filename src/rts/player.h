@@ -10,6 +10,7 @@
 namespace rts {
     class game;
     class unit;
+    class field;
 
     class player {
     private:
@@ -36,6 +37,8 @@ namespace rts {
         std::string getName() const;
 
         static bool nameTaken(const std::string& name);
+
+        void newUnit(field* field_);
 
         void removeAllUnits();
     };
