@@ -1,5 +1,9 @@
 #include "game.h"
+
 #include <cassert>
+
+#include "player.h"
+#include "unit.h"
 
 rts::game::game(const char *port) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
@@ -23,6 +27,7 @@ void rts::game::loopLogic(){
 void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
     activePlayers.insert(pl);
+    pl->units.insert(new unit(pl, _board.randomEmptyField(true))); // add first unit for the player to control
     pl->getClient()->sendToClient({'a'}); // joined active group
 }
 
@@ -40,6 +45,7 @@ void rts::game::moveQueuedPlayerToRoom() {
 void rts::game::removePlayerFromRoomOrQueue(player* pl) {
     if (activePlayers.find(pl) != activePlayers.end()) {
         activePlayers.erase(pl);
+        pl->removeAllUnits();
         if (!queuedPlayers.empty()) moveQueuedPlayerToRoom();
     }
     auto it = std::find(queuedPlayers.begin(), queuedPlayers.end(), pl);

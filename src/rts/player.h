@@ -2,12 +2,14 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "../net/client.h"
 #include "../msg/handler.h"
 
 namespace rts {
     class game;
+    class unit;
 
     class player {
     private:
@@ -25,6 +27,8 @@ namespace rts {
         static void removeName(const std::string& name);
 
     public:
+        std::unordered_set<unit*> units;
+
         player(game* game_, client* client_);
         ~player();
 
@@ -32,5 +36,7 @@ namespace rts {
         std::string getName() const;
 
         static bool nameTaken(const std::string& name);
+
+        void removeAllUnits();
     };
 }

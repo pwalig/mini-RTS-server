@@ -1,43 +1,59 @@
 #include "board.h"
 
 #include <cassert>
+#include "unit.h"
 
+rts::board::board() : gen(std::random_device()()) {
+    for (unsigned int x = 0; x < 256; ++x) {
+        fields.push_back(std::vector<field>());
+        for (unsigned int y = 0; y < 256; ++y) {
+            fields[x].push_back(field(x, y));
+        }
+    }
+}
 
 std::vector<char> rts::board::boardStateMessage() const {
     return std::vector<char>(); // TO DO
 }
-bool rts::board::empty(const unsigned int& xpos, const unsigned int& ypos) const {
-    return fields[xpos][ypos].empty();
-}
-bool rts::board::hasResource(const unsigned int& xpos, const unsigned int& ypos) const {
-    return fields[xpos][ypos].hasResource();
-}
-bool rts::board::canAttack(unit* u, unit* target) const{
-    assert(u);
-    assert(target);
-    return (std::abs((int)(u->xpos - target->xpos)) + std::abs((int)(u->ypos - target->ypos)) <= 1);
-}
-bool rts::board::canMine(unit* u) const {
-    assert(u);
-    return fields[u->xpos][u->ypos].hasResource();
+rts::field& rts::board::getField(const unsigned int& xpos, const unsigned int& ypos) {
+    return fields[xpos][ypos];
 }
 
-void rts::board::move(unit* u, const unsigned int& xpos, const unsigned int& ypos) {
-    assert(u);
-    assert(empty(xpos, ypos));
-    fields[u->xpos][u->ypos].removeUnit(u);
-    u->xpos = xpos;
-    u->ypos = ypos;
-    fields[xpos][ypos].placeUnit(u);
+std::vector<rts::field*> rts::board::resourceFields(bool resource) {
+    std::vector<field*> out;
+    for (std::vector<field>& row : fields){
+        for (field& f : row) {
+            if (f.hasResource() == resource) out.push_back(&f);
+        }
+    }
+    return out;
 }
-void rts::board::mine(unit* u) {
-    assert(canMine(u));
-    fields[u->xpos][u->ypos].mine();
 
+std::vector<rts::field*> rts::board::emptyFields(bool empty) {
+    std::vector<field*> out;
+    for (std::vector<field>& row : fields){
+        for (field& f : row) {
+            if (f.empty() == empty) out.push_back(&f);
+        }
+    }
+    return out;
 }
-void rts::board::attack(unit* u, unit* target) {
-    assert(canAttack(u, target));
-    unsigned int dist = std::abs((int)(u->xpos - target->xpos)) + std::abs((int)(u->ypos - target->ypos));
-    assert(dist <= 1);
-    target->hp -= 10;
+
+rts::field* rts::board::randomField() {
+    std::uniform_int_distribution<> distrib(0, 255);
+    return &fields[distrib(gen)][distrib(gen)];
+}
+rts::field* rts::board::randomEmptyField(bool empty) {
+    std::vector<field*> resFields = emptyFields(empty);
+    std::uniform_int_distribution<> distrib(0, resFields.size() - 1);
+    return resFields[distrib(gen)];
+}
+rts::field* rts::board::randomResourceField(bool resource) {
+    std::vector<field*> resFields = resourceFields(resource);
+    std::uniform_int_distribution<> distrib(0, resFields.size() - 1);
+    return resFields[distrib(gen)];
+}
+
+void rts::board::spawnResource() {
+    randomField()->spawnResource();
 }

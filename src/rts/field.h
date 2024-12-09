@@ -1,12 +1,15 @@
 #pragma once
-#include "unit.h"
 
 namespace rts {
+    class unit;
+
     class field {
         int resourceHp = 0;
         unit* _unit = nullptr;
 
     public:
+        field(const unsigned int& xpos, const unsigned int& ypos);
+
         bool empty() const;
         bool hasResource() const;
 
@@ -14,5 +17,8 @@ namespace rts {
         void removeUnit(unit* u);
         void spawnResource();
         void mine();
+        
+        const unsigned int x;
+        const unsigned int y;
     };
 }

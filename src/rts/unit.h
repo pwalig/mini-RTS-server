@@ -1,13 +1,19 @@
 #pragma once
 
-#include "player.h"
-
 namespace rts {
+    class player;
+    class field;
+
     class unit {
     public:
         unsigned int hp = 100;
-        unsigned int xpos = 0;
-        unsigned int ypos = 0;
-        player* owner;
+        field* f;
+        player* const owner;
+
+        unit(player* owner_, field* field_);
+        void mine();
+        void move(field* field_);
+        void attack(unit* target);
+        ~unit();
     };
 }

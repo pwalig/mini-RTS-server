@@ -4,11 +4,13 @@
 
 #include "../msg/name.h"
 #include "game.h"
+#include "unit.h"
 
 std::unordered_map<std::string, rts::player*> rts::player::playersByName;
 
 rts::player::player(game* game_, client* client_) : _client(client_), mh(client_), _game(game_) {
     mh.onNewMessage = std::bind(&rts::player::handleNewMessage, this, std::placeholders::_1);
+
     printf("new player created from: ");
     _client->printName();
     printf("\n");
@@ -68,7 +70,13 @@ bool rts::player::nameTaken(const std::string& name) {
     return (playersByName.find(name) != playersByName.end());
 }
 
+void rts::player::removeAllUnits(){
+    for (unit* u : units) delete u;
+    units.clear();
+}
+
 rts::player::~player(){
+    removeAllUnits();
     if (_name != "") removeName(_name);
     printf("%s left\n", _name.c_str());
 }

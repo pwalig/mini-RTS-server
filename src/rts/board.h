@@ -1,6 +1,7 @@
 #pragma once
 
 #include<vector>
+#include <random>
 
 #include "field.h"
 
@@ -8,15 +9,21 @@ namespace rts {
     class board {
         std::vector<std::vector<field>> fields;
 
-        public:
-        std::vector<char> boardStateMessage() const;
-        bool empty(const unsigned int& xpos, const unsigned int& ypos) const;
-        bool hasResource(const unsigned int& xpos, const unsigned int& ypos) const;
-        bool canAttack(unit* u, unit* target) const;
-        bool canMine(unit* u) const;
+        std::mt19937 gen; // mersenne_twister_engine seeded with rd()
 
-        void move(unit* u, const unsigned int& xpos, const unsigned int& ypos);
-        void mine(unit* u);
-        void attack(unit* u, unit* target);
+        public:
+        board();
+
+        std::vector<char> boardStateMessage() const;
+        
+        field& getField(const unsigned int& xpos, const unsigned int& ypos);
+
+        std::vector<field*> resourceFields(bool resource);
+        std::vector<field*> emptyFields(bool empty);
+        field* randomField();
+        field* randomEmptyField(bool empty);
+        field* randomResourceField(bool resource);
+
+        void spawnResource();
     };
 }

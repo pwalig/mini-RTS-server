@@ -4,9 +4,11 @@
 #include <deque>
 
 #include "../net/server.h"
-#include "player.h"
+#include "board.h"
 
 namespace rts {
+    class player;
+
     class game {
     private:
         server _server;
@@ -23,6 +25,8 @@ namespace rts {
         void moveQueuedPlayerToRoom();
 
     public:
+        board _board;
+        
         game(const char *port);
 
         void run();
