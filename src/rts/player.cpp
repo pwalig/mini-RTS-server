@@ -19,7 +19,7 @@ void rts::player::handleNewMessage(const message::base* msg) {
         const message::name* cmsg = dynamic_cast<const message::name*>(msg);
         assert(cmsg);
         if (cmsg->_name != _name && nameTaken(cmsg->_name)) { // other player has that name
-            _client->sendToClient({'n', '\n'}); // name taken
+            _client->sendToClient({'t', '\n'}); // name taken
         }
         else if (_name == "") setName(cmsg->_name);
         else reName(cmsg->_name);
@@ -44,6 +44,7 @@ void rts::player::setName(const std::string& name) {
     playersByName.insert({_name, this});
     _client->printName();
     printf(" named self: %s\n", _name.c_str());
+    _client->sendToClient({'y', '\n'}); // rename succesfull
 }
 
 void rts::player::reName(const std::string& name) {

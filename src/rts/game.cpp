@@ -53,7 +53,10 @@ void rts::game::run() {
 }
 
 void rts::game::tryJoin(player* pl){
-    if (activePlayers.size() < maxPlayers) {
+    if (pl->getName() == "") {
+        pl->getClient()->sendToClient({'n', '\n'}); // client unnamed
+    }
+    else if (activePlayers.size() < maxPlayers) {
         addPlayerToRoom(pl);
     }
     else {
