@@ -14,8 +14,10 @@ Some messages consist of only type character others contain more data.
 ### From server
 
 - `i` - server could not match message type sent by client with any of the available ones
-- `a` - player was sent to game room
-- `q` - player was sent to queue
-- `t` - selected name was taken
-- `y` - player (re)named succesfully
-- `n` - join request denied because player was unnamed
+- `a` - player was sent to game room (in response to: `j`)
+- `q` - player was sent to queue (in response to: `j`)
+- `y` - client request accepted
+  - in response to: `n` - player (re)named succesfully
+- `n` - client request accepted
+  - in response to: `j` - player was unnamed
+  - in response to: `t` - selected name was taken
