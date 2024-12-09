@@ -19,6 +19,10 @@ void message::handler::handle(const std::vector<char>& stream) {
 
     while (!buffer.empty())
     {
+        while(std::isspace(buffer[0])){
+            buffer.pop_front();
+            if (buffer.empty()) return;
+        }
         
         if (msgType == '?') {
             msgType = buffer[0];
@@ -53,6 +57,18 @@ void message::handler::init(){
             mh->msgType = '?';
         }
         
+    };
+
+    messageProcessors['j'] = [](message::handler* mh){
+        message::base msg(type::joinRequest);
+        mh->onNewMessage(&msg);
+        mh->msgType = '?';
+    };
+
+    messageProcessors['q'] = [](message::handler* mh){
+        message::base msg(type::quit);
+        mh->onNewMessage(&msg);
+        mh->msgType = '?';
     };
 }
 

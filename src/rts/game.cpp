@@ -1,4 +1,5 @@
 #include "game.h"
+#include <cassert>
 
 rts::game::game(const char *port) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
@@ -19,30 +20,50 @@ void rts::game::loopLogic(){
     }
 }
 
+void rts::game::addPlayerToRoom(player* pl) {
+    assert(activePlayers.size() < maxPlayers);
+    activePlayers.insert(pl);
+    pl->getClient()->sendToClient({'a', '\n'}); // joined active group
+}
+
+void rts::game::addPlayerToQueue(player* pl) {
+    queuedPlayers.push_back(pl);
+    pl->getClient()->sendToClient({'q', '\n'}); // put into queue
+}
+
+void rts::game::moveQueuedPlayerToRoom() {
+    assert(!queuedPlayers.empty());
+    addPlayerToRoom(queuedPlayers.front());
+    queuedPlayers.pop_front();
+}
+
+void rts::game::removePlayerFromRoomOrQueue(player* pl) {
+    if (activePlayers.find(pl) != activePlayers.end()) {
+        activePlayers.erase(pl);
+        if (!queuedPlayers.empty()) moveQueuedPlayerToRoom();
+    }
+    auto it = std::find(queuedPlayers.begin(), queuedPlayers.end(), pl);
+    if (it != queuedPlayers.end()) {
+        queuedPlayers.erase(it);
+    }
+}
+
 void rts::game::run() {
     _server.loop(1000);
 }
 
 void rts::game::tryJoin(player* pl){
     if (activePlayers.size() < maxPlayers) {
-        activePlayers.insert(pl);
-        pl->getClient()->sendToClient({'a', '\n'}); // joined active group
+        addPlayerToRoom(pl);
     }
     else {
-        queuedPlayers.push_back(pl);
-        pl->getClient()->sendToClient({'q', '\n'}); // put into queue
+        addPlayerToQueue(pl);
     }
 }
 
 void rts::game::deletePlayer(player* pl){
     allPlayers.erase(pl);
-    if (activePlayers.find(pl) != activePlayers.end()) {
-        activePlayers.erase(pl);
-    }
-    auto it = std::find(queuedPlayers.begin(), queuedPlayers.end(), pl);
-    if (it != queuedPlayers.end()) {
-        queuedPlayers.erase(it);
-    }
+    removePlayerFromRoomOrQueue(pl);
     delete pl;
 }
 

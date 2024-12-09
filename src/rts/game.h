@@ -18,11 +18,16 @@ namespace rts {
         void handleNewClient(client* client_);
         void loopLogic();
 
+        void addPlayerToRoom(player* pl);
+        void addPlayerToQueue(player* pl);
+        void moveQueuedPlayerToRoom();
+
     public:
         game(const char *port);
 
         void run();
         void tryJoin(player* pl);
+        void removePlayerFromRoomOrQueue(player* pl);
         void deletePlayer(player* pl);
 
         ~game();

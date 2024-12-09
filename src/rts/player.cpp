@@ -30,6 +30,12 @@ void rts::player::handleNewMessage(const message::base* msg) {
     else if (msg->typ == message::type::disconnect) {
         _game->deletePlayer(this);
     }
+    else if (msg->typ == message::type::joinRequest) {
+        _game->tryJoin(this);
+    }
+    else if (msg->typ == message::type::quit) {
+        _game->removePlayerFromRoomOrQueue(this);
+    }
 }
 
 void rts::player::setName(const std::string& name) {
@@ -38,7 +44,6 @@ void rts::player::setName(const std::string& name) {
     playersByName.insert({_name, this});
     _client->printName();
     printf(" named self: %s\n", _name.c_str());
-    _game->tryJoin(this);
 }
 
 void rts::player::reName(const std::string& name) {
