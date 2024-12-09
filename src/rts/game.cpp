@@ -23,12 +23,12 @@ void rts::game::loopLogic(){
 void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
     activePlayers.insert(pl);
-    pl->getClient()->sendToClient({'a', '\n'}); // joined active group
+    pl->getClient()->sendToClient({'a'}); // joined active group
 }
 
 void rts::game::addPlayerToQueue(player* pl) {
     queuedPlayers.push_back(pl);
-    pl->getClient()->sendToClient({'q', '\n'}); // put into queue
+    pl->getClient()->sendToClient({'q'}); // put into queue
 }
 
 void rts::game::moveQueuedPlayerToRoom() {
@@ -54,7 +54,7 @@ void rts::game::run() {
 
 void rts::game::tryJoin(player* pl){
     if (pl->getName() == "") {
-        pl->getClient()->sendToClient({'n', '\n'}); // client unnamed
+        pl->getClient()->sendToClient({'n'}); // client unnamed
     }
     else if (activePlayers.size() < maxPlayers) {
         addPlayerToRoom(pl);
