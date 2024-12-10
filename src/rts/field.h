@@ -17,6 +17,8 @@ namespace rts {
         void removeUnit(unit* u);
         void spawnResource();
         void mine();
+
+        int getHp() const;
         
         const unsigned int x;
         const unsigned int y;

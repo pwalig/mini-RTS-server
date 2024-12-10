@@ -11,7 +11,7 @@ bool rts::field::empty() const {
 }
 
 bool rts::field::hasResource() const {
-    return (resourceHp >= 0);
+    return (resourceHp > 0);
 }
 
 void rts::field::placeUnit(unit* u) {
@@ -31,4 +31,8 @@ void rts::field::spawnResource() {
 
 void rts::field::mine() {
     resourceHp -= 10;
+}
+
+int rts::field::getHp() const {
+    return resourceHp;
 }

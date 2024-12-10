@@ -4,6 +4,7 @@
 
 #include "player.h"
 #include "unit.h"
+#include <string.h>
 
 rts::game::game(const char *port) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
@@ -16,8 +17,41 @@ void rts::game::handleNewClient(client* client_) {
 }
 
 void rts::game::loopLogic(){
-    char msg[8] = "update\n";
-    std::vector<char> buff(msg, msg + 8);
+    // spawn resource
+    if (rand() % 10 == 0) _board.spawnResource();
+
+    // sent updates to clients
+    std::vector<char> buff = {'s', 'p'};
+    buff.push_back((char)(activePlayers.size() + 48));
+
+    // players
+    for (player* p : activePlayers) {
+        unsigned long it = buff.size();
+        std::string name = p->getName();
+        buff.resize(buff.size() + name.size());
+        memcpy(&buff.data()[it], (void*)name.c_str(), name.size());
+        buff.push_back('\n');
+        
+        buff.push_back((char)(p->units.size() + 48));
+        for (unit* u : p->units) {
+            buff.push_back('u');
+            buff.push_back((char)u->f->x);
+            buff.push_back((char)u->f->y);
+            buff.push_back((char)u->hp);
+            buff.push_back('\n');
+        }
+    }
+
+    // resources
+    for (field* f : _board.resourceFields(true)) {
+        buff.push_back('f');
+        buff.push_back((char)f->x);
+        buff.push_back((char)f->y);
+        buff.push_back((char)f->getHp());
+        buff.push_back('\n');
+    }
+
+    buff.push_back('s');
 
     for (player* p : activePlayers){
         p->getClient()->sendToClient(buff);

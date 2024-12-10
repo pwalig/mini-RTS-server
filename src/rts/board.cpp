@@ -13,7 +13,8 @@ rts::board::board() : gen(std::random_device()()) {
 }
 
 std::vector<char> rts::board::boardStateMessage() const {
-    return std::vector<char>(); // TO DO
+    std::vector<char> data;
+    return data;
 }
 rts::field& rts::board::getField(const unsigned int& xpos, const unsigned int& ypos) {
     return fields[xpos][ypos];
