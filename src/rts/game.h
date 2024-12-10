@@ -17,8 +17,13 @@ namespace rts {
         std::unordered_set<player*> activePlayers;
         std::deque<player*> queuedPlayers;
 
+        unsigned int millis = 1000;
+        unsigned int startResources = 25;
+
         void handleNewClient(client* client_);
         void loopLogic();
+        void clearRoom();
+        void startGame();
 
         void addPlayerToRoom(player* pl);
         void addPlayerToQueue(player* pl);

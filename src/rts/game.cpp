@@ -8,7 +8,6 @@
 
 rts::game::game(const char *port) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
-    _server.loopLogic = std::bind(&rts::game::loopLogic, this);
 }
 
 void rts::game::handleNewClient(client* client_) {
@@ -58,6 +57,23 @@ void rts::game::loopLogic(){
     }
 }
 
+void rts::game::clearRoom() {
+    for (player* pl : activePlayers) { // remove all player from game room
+        activePlayers.erase(pl);
+        pl->removeAllUnits();
+    }
+    _board = board(); // reset board
+    _server.loopLogic = [](){};
+}
+
+void rts::game::startGame() {
+    _board.spawnResources(startResources);
+    while(!queuedPlayers.empty() && activePlayers.size() < maxPlayers){
+        moveQueuedPlayerToRoom();
+    }
+    _server.loopLogic = std::bind(&rts::game::loopLogic, this);
+}
+
 void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
     activePlayers.insert(pl);
@@ -81,6 +97,7 @@ void rts::game::removePlayerFromRoomOrQueue(player* pl) {
         activePlayers.erase(pl);
         pl->removeAllUnits();
         if (!queuedPlayers.empty()) moveQueuedPlayerToRoom();
+        if (activePlayers.empty()) clearRoom();
     }
     auto it = std::find(queuedPlayers.begin(), queuedPlayers.end(), pl);
     if (it != queuedPlayers.end()) {
@@ -89,7 +106,7 @@ void rts::game::removePlayerFromRoomOrQueue(player* pl) {
 }
 
 void rts::game::run() {
-    _server.loop(1000);
+    _server.loop(millis);
 }
 
 void rts::game::tryJoin(player* pl){
@@ -97,6 +114,7 @@ void rts::game::tryJoin(player* pl){
         pl->getClient()->sendToClient({'n'}); // client unnamed
     }
     else if (activePlayers.size() < maxPlayers) {
+        if (activePlayers.empty()) startGame();
         addPlayerToRoom(pl);
     }
     else {

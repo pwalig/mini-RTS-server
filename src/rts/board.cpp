@@ -58,3 +58,9 @@ rts::field* rts::board::randomResourceField(bool resource) {
 void rts::board::spawnResource() {
     randomField()->spawnResource();
 }
+
+void rts::board::spawnResources(const unsigned int& amount) {
+    for (unsigned int i = 0; i < amount; ++i) {
+        spawnResource();
+    }
+}

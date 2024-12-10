@@ -25,5 +25,6 @@ namespace rts {
         field* randomResourceField(bool resource);
 
         void spawnResource();
+        void spawnResources(const unsigned int& amount);
     };
 }
