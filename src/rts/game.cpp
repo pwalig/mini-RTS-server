@@ -21,29 +21,29 @@ void rts::game::loopLogic(){
     if (rand() % 10 == 0) _board.spawnResource();
 
     // sent updates to clients
-    std::vector<char> buff = {'p', ';'};
+    std::vector<char> buff = {'p', ' '};
     message::appendNumberWDelim(buff, activePlayers.size(), '\n'); // amount of players
 
     // players
     for (player* p : activePlayers) {
-        message::appendStringWDelim(buff, p->getName(), ';'); // player name
+        message::appendStringWDelim(buff, p->getName(), ' '); // player name
         message::appendNumberWDelim(buff, p->units.size(), '\n'); // amount of units
         
         for (unit* u : p->units) {
-            message::appendNumberWDelim(buff, u->f->x, ';');
-            message::appendNumberWDelim(buff, u->f->y, ';');
+            message::appendNumberWDelim(buff, u->f->x, ' ');
+            message::appendNumberWDelim(buff, u->f->y, ' ');
             message::appendNumberWDelim(buff, u->hp, '\n');
         }
     }
 
     // resources
     buff.push_back('r');
-    buff.push_back(';');
+    buff.push_back(' ');
     std::vector<rts::field*> resources = _board.resourceFields(true);
     message::appendNumberWDelim(buff, resources.size(), '\n'); // amount of resources
     for (field* f : resources) {
-        message::appendNumberWDelim(buff, f->x, ';');
-        message::appendNumberWDelim(buff, f->y, ';');
+        message::appendNumberWDelim(buff, f->x, ' ');
+        message::appendNumberWDelim(buff, f->y, ' ');
         message::appendNumberWDelim(buff, f->getHp(), '\n');
     }
 

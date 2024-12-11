@@ -31,15 +31,15 @@ Board state update is sent to all players in the game room in regular time inter
 
 Structure as follows:
 
-`p` `;` `<amount of players>` `\n`  
-`<player 1 name>` `;` `<amount of units of player1>` `\n`  
-`<x posion>` `;` `<y position>` `;` `<hp>` `\n`  
+`p` ` ` `<amount of players>` `\n`  
+`<player 1 name>` ` ` `<amount of units of player1>` `\n`  
+`<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
 ...  
-`<player 2 name>` `;` `<amount of units of player1>` `\n`  
-`<x posion>` `;` `<y position>` `;` `<hp>` `\n`  
+`<player 2 name>` ` ` `<amount of units of player1>` `\n`  
+`<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
 ...  
 ...  
-`r` `;` `<amount of fields with resource>` `\n`  
-`<x posion>` `;` `<y position>` `;` `<hp>` `\n`  
-`<x posion>` `;` `<y position>` `;` `<hp>` `\n`  
+`r` ` ` `<amount of fields with resource>` `\n`  
+`<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
+`<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
 ...
