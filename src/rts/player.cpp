@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "../msg/name.h"
+#include "../msg/unitCommands.h"
 #include "game.h"
 #include "unit.h"
 
@@ -37,6 +38,27 @@ void rts::player::handleNewMessage(const message::base* msg) {
     }
     else if (msg->typ == message::type::quit) {
         _game->removePlayerFromRoomOrQueue(this);
+    }
+    else if (msg->typ == message::type::move) {
+        const message::move* cmsg = dynamic_cast<const message::move*>(msg);
+        assert(cmsg);
+        unit* u = _game->_board.getField(cmsg->sourceX, cmsg->sourceY)._unit;
+        if (u->owner != this) _client->sendToClient({'n'});
+        else u->move(&_game->_board.getField(cmsg->destX, cmsg->destY));
+    }
+    else if (msg->typ == message::type::attack) {
+        const message::attack* cmsg = dynamic_cast<const message::attack*>(msg);
+        assert(cmsg);
+        unit* u = _game->_board.getField(cmsg->sourceX, cmsg->sourceY)._unit;
+        if (u->owner != this) _client->sendToClient({'n'});
+        else u->attack(_game->_board.getField(cmsg->destX, cmsg->destY)._unit);
+    }
+    else if (msg->typ == message::type::mine) {
+        const message::mine* cmsg = dynamic_cast<const message::mine*>(msg);
+        assert(cmsg);
+        unit* u = _game->_board.getField(cmsg->sourceX, cmsg->sourceY)._unit;
+        if (u->owner != this) _client->sendToClient({'n'});
+        else u->mine();
     }
 }
 

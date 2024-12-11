@@ -5,16 +5,12 @@ namespace rts {
 
     class field {
         int resourceHp = 0;
-        unit* _unit = nullptr;
 
     public:
         field(const unsigned int& xpos, const unsigned int& ypos);
 
         bool empty() const;
         bool hasResource() const;
-
-        void placeUnit(unit* u);
-        void removeUnit(unit* u);
         void spawnResource();
         void mine();
 
@@ -22,5 +18,6 @@ namespace rts {
         
         const unsigned int x;
         const unsigned int y;
+        unit* _unit = nullptr;
     };
 }
