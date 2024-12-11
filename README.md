@@ -1,9 +1,26 @@
 # mini-RTS-server
 server for minimalistic RTS game
 
+# Building with CMake
+
+Configure project:
+
+```
+mkdir build
+cd build 
+cmake ..
+
+```
+
+Once configuration is successful build project with avaliable tool
+for example
+```
+make
+```
+
 # Running server
 
-`./server <port> [config file]`
+`./mini-rts-server <port> [config file]`
 
 # Configuring server
 
