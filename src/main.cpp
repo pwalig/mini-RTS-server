@@ -18,13 +18,13 @@ void ctrl_c(int){
 }
 
 int main(int argc, char** argv){
-    if (argc != 2) error(1, 0, "Usage: %s <port>", argv[0]);
+    if (argc != 2 && argc != 3) error(1, 0, "Usage: %s <port> [config file]", argv[0]);
 
     signal(SIGINT, ctrl_c);
 
     message::handler::init();
 
-    game_ = new rts::game(argv[1]);
+    game_ = new rts::game(argv[1], argc == 3 ? argv[2] : nullptr);
 
     game_->run();
 

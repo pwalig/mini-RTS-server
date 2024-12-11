@@ -3,10 +3,10 @@
 #include <cassert>
 #include "unit.h"
 
-rts::board::board() : gen(std::random_device()()) {
-    for (unsigned int x = 0; x < 256; ++x) {
+rts::board::board(unsigned int X, unsigned int Y) : gen(std::random_device()()) {
+    for (unsigned int x = 0; x < X; ++x) {
         fields.push_back(std::vector<field>());
-        for (unsigned int y = 0; y < 256; ++y) {
+        for (unsigned int y = 0; y < Y; ++y) {
             fields[x].push_back(field(x, y));
         }
     }
@@ -41,7 +41,7 @@ std::vector<rts::field*> rts::board::emptyFields(bool empty) {
 }
 
 rts::field* rts::board::randomField() {
-    std::uniform_int_distribution<> distrib(0, 255);
+    std::uniform_int_distribution<> distrib(0, fields.size() - 1);
     return &fields[distrib(gen)][distrib(gen)];
 }
 rts::field* rts::board::randomEmptyField(bool empty) {
