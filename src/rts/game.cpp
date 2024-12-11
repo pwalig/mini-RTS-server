@@ -5,6 +5,7 @@
 #include "player.h"
 #include "unit.h"
 #include <string.h>
+#include "../msg/stringBuffer.h"
 
 rts::game::game(const char *port) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
@@ -20,37 +21,31 @@ void rts::game::loopLogic(){
     if (rand() % 10 == 0) _board.spawnResource();
 
     // sent updates to clients
-    std::vector<char> buff = {'s', 'p'};
-    buff.push_back((char)(activePlayers.size() + 48));
+    std::vector<char> buff = {'p', ';'};
+    message::appendNumberWDelim(buff, activePlayers.size(), '\n'); // amount of players
 
     // players
     for (player* p : activePlayers) {
-        unsigned long it = buff.size();
-        std::string name = p->getName();
-        buff.resize(buff.size() + name.size());
-        memcpy(&buff.data()[it], (void*)name.c_str(), name.size());
-        buff.push_back('\n');
+        message::appendStringWDelim(buff, p->getName(), ';'); // player name
+        message::appendNumberWDelim(buff, p->units.size(), '\n'); // amount of units
         
-        buff.push_back((char)(p->units.size() + 48));
         for (unit* u : p->units) {
-            buff.push_back('u');
-            buff.push_back((char)u->f->x);
-            buff.push_back((char)u->f->y);
-            buff.push_back((char)u->hp);
-            buff.push_back('\n');
+            message::appendNumberWDelim(buff, u->f->x, ';');
+            message::appendNumberWDelim(buff, u->f->y, ';');
+            message::appendNumberWDelim(buff, u->hp, '\n');
         }
     }
 
     // resources
-    for (field* f : _board.resourceFields(true)) {
-        buff.push_back('f');
-        buff.push_back((char)f->x);
-        buff.push_back((char)f->y);
-        buff.push_back((char)f->getHp());
-        buff.push_back('\n');
+    buff.push_back('r');
+    buff.push_back(';');
+    std::vector<rts::field*> resources = _board.resourceFields(true);
+    message::appendNumberWDelim(buff, resources.size(), '\n'); // amount of resources
+    for (field* f : resources) {
+        message::appendNumberWDelim(buff, f->x, ';');
+        message::appendNumberWDelim(buff, f->y, ';');
+        message::appendNumberWDelim(buff, f->getHp(), '\n');
     }
-
-    buff.push_back('s');
 
     for (player* p : activePlayers){
         p->getClient()->sendToClient(buff);
