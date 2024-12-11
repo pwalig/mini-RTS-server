@@ -8,7 +8,7 @@
 #include <sys/epoll.h>
 #include <chrono>
 
-#include "error.h"
+#include <net/error.hpp>
 #include <net/client.hpp>
 
 server::server(const char *port) {
