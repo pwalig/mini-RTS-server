@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "../net/client.h"
-#include "../msg/handler.h"
+#include <net/client.hpp>
+#include <msg/handler.hpp>
 
 namespace rts {
     class game;

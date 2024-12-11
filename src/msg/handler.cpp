@@ -1,8 +1,7 @@
-#include "handler.h"
-
+#include <msg/handler.hpp>
 #include <string>
 
-#include "name.h"
+#include <msg/name.hpp>
 
 std::unordered_map<char, std::function<void(message::handler*)>> message::handler::messageProcessors;
 

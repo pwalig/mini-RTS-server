@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "base.h"
+#include <msg/base.hpp>
 
 namespace message {
     class name : public base {

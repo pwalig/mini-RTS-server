@@ -1,8 +1,8 @@
-#include "field.h"
+#include <rts/field.hpp>
 
 #include <cassert>
 
-#include "unit.h"
+#include <rts/unit.hpp>
 
 rts::field::field(const unsigned int& xpos, const unsigned int& ypos) : x(xpos), y(ypos) {}
 

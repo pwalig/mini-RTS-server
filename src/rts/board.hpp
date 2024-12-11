@@ -3,7 +3,7 @@
 #include<vector>
 #include <random>
 
-#include "field.h"
+#include <rts/field.hpp>
 
 namespace rts {
     class board {

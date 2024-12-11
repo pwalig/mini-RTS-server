@@ -2,8 +2,8 @@
 
 #include <deque>
 
-#include "../net/client.h"
-#include "base.h"
+#include <net/client.hpp>
+#include <msg/base.hpp>
 
 namespace message {
 

@@ -1,11 +1,11 @@
-#include "game.h"
+#include <rts/game.hpp>
 
 #include <cassert>
 
-#include "player.h"
-#include "unit.h"
+#include <rts/player.hpp>
+#include <rts/unit.hpp>
 #include <string.h>
-#include "../msg/stringBuffer.h"
+#include <msg/stringBuffer.hpp>
 
 rts::game::game(const char *port) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
