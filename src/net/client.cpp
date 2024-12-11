@@ -1,6 +1,6 @@
-#include "client.h"
-#include "error.h"
-#include "server.h"
+#include <net/client.hpp>
+#include <net/error.hpp>
+#include <net/server.hpp>
 #include <unistd.h>
 #include <netdb.h>
 

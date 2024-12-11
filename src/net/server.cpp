@@ -1,4 +1,4 @@
-#include "server.h"
+#include <net/server.hpp>
 
 #include <sys/socket.h>
 #include <unistd.h>
@@ -8,8 +8,8 @@
 #include <sys/epoll.h>
 #include <chrono>
 
-#include "error.h"
-#include "client.h"
+#include <net/error.hpp>
+#include <net/client.hpp>
 
 server::server(const char *port) {
 

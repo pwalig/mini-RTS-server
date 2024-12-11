@@ -1,4 +1,4 @@
-#include "unitCommands.h"
+#include <msg/unitCommands.hpp>
 
 message::move::move(unsigned int dx, unsigned int dy, unsigned int sx, unsigned int sy) :
 base(message::type::move), destX(dx), destY(dy), sourceX(sx), sourceY(sy) {}

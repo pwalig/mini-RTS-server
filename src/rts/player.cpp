@@ -1,11 +1,11 @@
-#include "player.h"
+#include <rts/player.hpp>
 
 #include <cassert>
 
-#include "../msg/name.h"
-#include "../msg/unitCommands.h"
-#include "game.h"
-#include "unit.h"
+#include <msg/name.hpp>
+#include <msg/unitCommands.hpp>
+#include <rts/game.hpp>
+#include <rts/unit.hpp>
 
 std::unordered_map<std::string, rts::player*> rts::player::playersByName;
 

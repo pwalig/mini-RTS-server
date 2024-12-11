@@ -1,11 +1,11 @@
-#include "game.h"
+#include <rts/game.hpp>
 
 #include <cassert>
 
-#include "player.h"
-#include "unit.h"
+#include <rts/player.hpp>
+#include <rts/unit.hpp>
 #include <string.h>
-#include "../msg/stringBuffer.h"
+#include <msg/stringBuffer.hpp>
 #include <fstream>
 
 rts::game::game(const char *port, const char* configFile) : _server(port) {

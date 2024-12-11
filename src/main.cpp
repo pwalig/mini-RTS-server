@@ -1,6 +1,6 @@
-#include "rts/game.h"
-#include "net/error.h"
-#include "msg/handler.h"
+#include <rts/game.hpp>
+#include <net/error.hpp>
+#include <msg/handler.hpp>
 #include <signal.h>
 
 rts::game* game_;

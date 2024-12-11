@@ -3,8 +3,8 @@
 #include <unordered_set>
 #include <deque>
 
-#include "../net/server.h"
-#include "board.h"
+#include <net/server.hpp>
+#include <rts/board.hpp>
 
 namespace rts {
     class player;

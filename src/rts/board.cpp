@@ -1,7 +1,7 @@
-#include "board.h"
+#include <rts/board.hpp>
 
 #include <cassert>
-#include "unit.h"
+#include <rts/unit.hpp>
 
 rts::board::board(unsigned int X, unsigned int Y) : gen(std::random_device()()) {
     for (unsigned int x = 0; x < X; ++x) {

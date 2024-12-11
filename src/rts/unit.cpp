@@ -1,10 +1,10 @@
-#include "unit.h"
+#include <rts/unit.hpp>
 
-#include "stdio.h"
+#include <cstdio>
 #include <cassert>
 
-#include "field.h"
-#include "player.h"
+#include <rts/field.hpp>
+#include <rts/player.hpp>
 
 rts::unit::unit(player* owner_, field* field_) : owner(owner_), f(field_) {
     printf("%s got new unit\n", owner->getName().c_str());

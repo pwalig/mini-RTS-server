@@ -1,4 +1,4 @@
-#include "stringBuffer.h"
+#include "stringBuffer.hpp"
 #include <memory.h>
 
 void message::appendString(std::vector<char>& buff, const std::string& s) {

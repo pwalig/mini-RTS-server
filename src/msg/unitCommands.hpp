@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base.h"
+#include <msg/base.hpp>
 
 namespace message {
     class move : public base {
