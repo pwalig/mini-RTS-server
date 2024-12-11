@@ -6,9 +6,32 @@
 #include <rts/unit.hpp>
 #include <string.h>
 #include <msg/stringBuffer.hpp>
+#include <fstream>
 
-rts::game::game(const char *port) : _server(port) {
+rts::game::game(const char *port, const char* configFile) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
+
+    if (configFile != nullptr) {
+        std::ifstream fin(configFile);
+        std::string name;
+        unsigned int val;
+        if (fin.is_open()) {
+            while (!fin.eof()) {
+                fin >> name;
+                fin >> val;
+                property(name) = val;
+            }
+        }
+    }
+}
+
+unsigned int& rts::game::property(const std::string& name) {
+    if (name == "maxPlayers") return maxPlayers;
+    if (name == "startResources") return startResources;
+    if (name == "millis") return millis;
+    if (name == "boardX") return boardX;
+    if (name == "boardY") return boardY;
+    throw std::logic_error("invalid property name");
 }
 
 void rts::game::handleNewClient(client* client_) {
@@ -57,11 +80,11 @@ void rts::game::clearRoom() {
         activePlayers.erase(pl);
         pl->removeAllUnits();
     }
-    _board = board(); // reset board
     _server.loopLogic = [](){};
 }
 
 void rts::game::startGame() {
+    _board = board(boardX, boardY); // reset board
     _board.spawnResources(startResources);
     while(!queuedPlayers.empty() && activePlayers.size() < maxPlayers){
         moveQueuedPlayerToRoom();

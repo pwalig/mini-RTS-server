@@ -1,7 +1,7 @@
 #include <msg/handler.hpp>
 #include <string>
-
 #include <msg/name.hpp>
+#include <msg/unitCommands.hpp>
 
 std::unordered_map<char, std::function<void(message::handler*)>> message::handler::messageProcessors;
 
@@ -39,23 +39,29 @@ void message::handler::handle(const std::vector<char>& stream) {
     }
 }
 
+bool message::handler::tryGetString(std::string& str, std::deque<char>::iterator& it, char delim) {
+    for (; it != buffer.end() && *it != delim; ++it){
+        str.push_back(*it);
+    }
+
+    if (it != buffer.end() && *it == delim) { // string found
+        ++it;
+        return true;
+    }
+
+    return false;
+}
+
 void message::handler::init(){
     messageProcessors['n'] = [](message::handler* mh){
         std::string name;
-        unsigned long i = 0;
-        while (i < mh->buffer.size() && mh->buffer[i] != '\n')
-        {
-            name.push_back(mh->buffer[i]);
-            ++i;
-        }
-
-        if (i < mh->buffer.size() && mh->buffer[i] == '\n') {
-            mh->buffer.erase(mh->buffer.begin(), mh->buffer.begin() + i + 1);
+        auto it = mh->buffer.begin();
+        if (mh->tryGetString(name, it)) {
             message::name msg(name);
             mh->onNewMessage(&msg);
+            mh->buffer.erase(mh->buffer.begin(), it);
             mh->msgType = '?';
         }
-        
     };
 
     messageProcessors['j'] = [](message::handler* mh){
@@ -68,6 +74,55 @@ void message::handler::init(){
         message::base msg(type::quit);
         mh->onNewMessage(&msg);
         mh->msgType = '?';
+    };
+
+    messageProcessors['m'] = [](message::handler* mh){
+        std::string sx, sy, dx, dy;
+        if (mh->buffer[0] != ' ') return;
+        mh->buffer.pop_front();
+        auto it = mh->buffer.begin();
+        bool success = mh->tryGetString(sx, it, ' ');
+        if (success) success &= mh->tryGetString(sy, it, ' ');
+        if (success) success &= mh->tryGetString(dx, it, ' ');
+        if (success) success &= mh->tryGetString(dy, it, '\n');
+        if (success) {
+            message::move msg(atoi(dx.c_str()), atoi(dy.c_str()), atoi(sx.c_str()), atoi(sy.c_str()));
+            mh->onNewMessage(&msg);
+            mh->buffer.erase(mh->buffer.begin(), it);
+            mh->msgType = '?';
+        }
+    };
+
+    messageProcessors['a'] = [](message::handler* mh){
+        std::string sx, sy, dx, dy;
+        if (mh->buffer[0] != ' ') return;
+        mh->buffer.pop_front();
+        auto it = mh->buffer.begin();
+        bool success = mh->tryGetString(sx, it, ' ');
+        if (success) success &= mh->tryGetString(sy, it, ' ');
+        if (success) success &= mh->tryGetString(dx, it, ' ');
+        if (success) success &= mh->tryGetString(dy, it, '\n');
+        if (success) {
+            message::attack msg(atoi(dx.c_str()), atoi(dy.c_str()), atoi(sx.c_str()), atoi(sy.c_str()));
+            mh->onNewMessage(&msg);
+            mh->buffer.erase(mh->buffer.begin(), it);
+            mh->msgType = '?';
+        }
+    };
+
+    messageProcessors['d'] = [](message::handler* mh){
+        std::string sx, sy;
+        if (mh->buffer[0] != ' ') return;
+        mh->buffer.pop_front();
+        auto it = mh->buffer.begin();
+        bool success = mh->tryGetString(sx, it, ' ');
+        if (success) success &= mh->tryGetString(sy, it, '\n');
+        if (success) {
+            message::mine msg(atoi(sx.c_str()), atoi(sy.c_str()));
+            mh->onNewMessage(&msg);
+            mh->buffer.erase(mh->buffer.begin(), it);
+            mh->msgType = '?';
+        }
     };
 }
 

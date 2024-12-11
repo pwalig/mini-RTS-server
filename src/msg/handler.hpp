@@ -4,6 +4,7 @@
 
 #include <net/client.hpp>
 #include <msg/base.hpp>
+#include <string>
 
 namespace message {
 
@@ -17,6 +18,8 @@ namespace message {
         
         // @brief handles onRecevie client callback
         void handle(const std::vector<char>& stream);
+
+        bool tryGetString(std::string& str, std::deque<char>::iterator& it, char delim = '\n');
 
     public:
         handler(client* client_);

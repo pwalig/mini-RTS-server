@@ -19,6 +19,8 @@ namespace rts {
 
         unsigned int millis = 1000;
         unsigned int startResources = 25;
+        unsigned int boardX = 256;
+        unsigned int boardY = 256;
 
         void handleNewClient(client* client_);
         void loopLogic();
@@ -29,10 +31,12 @@ namespace rts {
         void addPlayerToQueue(player* pl);
         void moveQueuedPlayerToRoom();
 
+        unsigned int& property(const std::string& name);
+
     public:
         board _board;
         
-        game(const char *port);
+        game(const char *port, const char* configFile);
 
         void run();
         void tryJoin(player* pl);

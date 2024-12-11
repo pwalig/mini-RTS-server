@@ -1,0 +1,4 @@
+millis 3000
+startResources 8
+boardX 5
+boardY 5

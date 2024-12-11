@@ -12,7 +12,7 @@ namespace rts {
         std::mt19937 gen; // mersenne_twister_engine seeded with rd()
 
         public:
-        board();
+        board(unsigned int x = 256, unsigned int y = 256);
 
         std::vector<char> boardStateMessage() const;
         
