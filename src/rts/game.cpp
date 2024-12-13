@@ -128,7 +128,10 @@ void rts::game::run() {
 }
 
 void rts::game::tryJoin(player* pl){
-    if (pl->getName() == "") {
+    if (pl->getName() == ""
+    || activePlayers.find(pl) != activePlayers.end()
+    || std::find(queuedPlayers.begin(), queuedPlayers.end(), pl) != queuedPlayers.end()
+    ) {
         pl->getClient()->sendToClient({'n'}); // client unnamed
     }
     else if (activePlayers.size() < maxPlayers) {
