@@ -68,6 +68,8 @@ Some messages consist of only type character others contain more data.
 - `q` - player was sent to queue (in response to: `j`)
 - `y` - client request accepted (in response to: `n`)
 - `n` - client request denied (in response to: `j` or `n`)
+- `L` - client lost the game (and was moved out of game room)
+- `W` - client won the game (and was moved out of game room)
  
 ### Board state update
 

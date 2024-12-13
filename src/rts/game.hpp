@@ -24,6 +24,7 @@ namespace rts {
         unsigned int resourceHp = 100;
         unsigned int unitHp = 100;
         unsigned int unitDamage = 10;
+        unsigned int unitsToWin = 50;
 
         void handleNewClient(client* client_);
         void loopLogic();
@@ -54,6 +55,11 @@ namespace rts {
 
         // @brief handles situation when player lost all units
         void playerLostAllUnits(player* pl);
+
+        // @brief call when player aquires new unit
+        // 
+        // checks if player won and if so ends the game
+        void tryWin(player* pl);
 
         unsigned int getUnitHp() const;
         unsigned int getUnitDamage() const;

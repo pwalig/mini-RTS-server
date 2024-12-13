@@ -34,6 +34,7 @@ unsigned int& rts::game::property(const std::string& name) {
     if (name == "resourceHp") return resourceHp;
     if (name == "unitHp") return unitHp;
     if (name == "unitDamage") return unitDamage;
+    if (name == "unitsToWin") return unitsToWin;
     throw std::logic_error("invalid property name");
 }
 
@@ -161,7 +162,20 @@ void rts::game::playerLostAllUnits(player* pl) {
     assert(pl);
     assert(activePlayers.find(pl) != activePlayers.end());
     pl->getClient()->sendToClient({'L'});
-    activePlayers.erase(pl);
+    removePlayerFromRoomOrQueue(pl);
+}
+
+void rts::game::tryWin(player* pl){
+    if (pl->units.size() >= unitsToWin) {
+        pl->getClient()->sendToClient({'W'});
+        for (player* p : activePlayers){
+            if (p != pl) p->getClient()->sendToClient({'L'});
+        }
+
+        clearRoom();
+
+        if (!queuedPlayers.empty()) startGame();
+    }
 }
 
 unsigned int rts::game::getUnitDamage() const {return unitDamage;}
