@@ -3,3 +3,4 @@ startResources 8
 boardX 5
 boardY 5
 resourceHp 20
+unitHp 20

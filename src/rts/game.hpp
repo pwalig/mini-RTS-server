@@ -22,6 +22,8 @@ namespace rts {
         unsigned int boardX = 256;
         unsigned int boardY = 256;
         unsigned int resourceHp = 100;
+        unsigned int unitHp = 100;
+        unsigned int unitDamage = 10;
 
         void handleNewClient(client* client_);
         void loopLogic();
@@ -43,6 +45,9 @@ namespace rts {
         void tryJoin(player* pl);
         void removePlayerFromRoomOrQueue(player* pl);
         void deletePlayer(player* pl);
+
+        unsigned int getUnitHp() const;
+        unsigned int getUnitDamage() const;
 
         ~game();
     };

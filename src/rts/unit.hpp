@@ -6,7 +6,7 @@ namespace rts {
 
     class unit {
     public:
-        unsigned int hp = 100;
+        unsigned int hp;
         field* f;
         player* const owner;
 
@@ -14,6 +14,8 @@ namespace rts {
         void mine();
         void move(field* field_);
         void attack(unit* target);
+
+        void recvDamage(unsigned int dmg);
         ~unit();
     };
 }

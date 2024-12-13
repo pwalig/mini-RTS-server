@@ -32,6 +32,8 @@ unsigned int& rts::game::property(const std::string& name) {
     if (name == "boardX") return boardX;
     if (name == "boardY") return boardY;
     if (name == "resourceHp") return resourceHp;
+    if (name == "unitHp") return unitHp;
+    if (name == "unitDamage") return unitDamage;
     throw std::logic_error("invalid property name");
 }
 
@@ -149,6 +151,9 @@ void rts::game::deletePlayer(player* pl){
     removePlayerFromRoomOrQueue(pl);
     delete pl;
 }
+
+unsigned int rts::game::getUnitDamage() const {return unitDamage;}
+unsigned int rts::game::getUnitHp() const {return unitHp;}
 
 rts::game::~game() {
     for (player* p : allPlayers){
