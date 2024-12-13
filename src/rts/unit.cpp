@@ -44,6 +44,9 @@ void rts::unit::recvDamage(unsigned int dmg){
     hp -= dmg;
     if (hp <= 0) {
         owner->units.erase(this);
+        if (owner->units.empty()) {
+            owner->getGame()->playerLostAllUnits(owner);
+        }
         delete this;
     }
 }

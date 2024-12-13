@@ -42,9 +42,18 @@ namespace rts {
         game(const char *port, const char* configFile);
 
         void run();
+
+        // @brief response to client 'j' (join) request
         void tryJoin(player* pl);
+
+        // @brief response to client 'q' (quit) request
         void removePlayerFromRoomOrQueue(player* pl);
+
+        // @brief handles player disconnecting
         void deletePlayer(player* pl);
+
+        // @brief handles situation when player lost all units
+        void playerLostAllUnits(player* pl);
 
         unsigned int getUnitHp() const;
         unsigned int getUnitDamage() const;

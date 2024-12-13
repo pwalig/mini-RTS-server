@@ -80,9 +80,9 @@ void rts::game::loopLogic(){
 
 void rts::game::clearRoom() {
     for (player* pl : activePlayers) { // remove all player from game room
-        activePlayers.erase(pl);
         pl->removeAllUnits();
     }
+    activePlayers.clear();
     _server.loopLogic = [](){};
 }
 
@@ -114,15 +114,20 @@ void rts::game::moveQueuedPlayerToRoom() {
 }
 
 void rts::game::removePlayerFromRoomOrQueue(player* pl) {
+    // delete from room
     if (activePlayers.find(pl) != activePlayers.end()) {
         activePlayers.erase(pl);
         pl->removeAllUnits();
         if (!queuedPlayers.empty()) moveQueuedPlayerToRoom();
         if (activePlayers.empty()) clearRoom();
     }
-    auto it = std::find(queuedPlayers.begin(), queuedPlayers.end(), pl);
-    if (it != queuedPlayers.end()) {
-        queuedPlayers.erase(it);
+
+    // delete from queue
+    else {
+        auto it = std::find(queuedPlayers.begin(), queuedPlayers.end(), pl);
+        if (it != queuedPlayers.end()) {
+            queuedPlayers.erase(it);
+        }
     }
 }
 
@@ -150,6 +155,13 @@ void rts::game::deletePlayer(player* pl){
     allPlayers.erase(pl);
     removePlayerFromRoomOrQueue(pl);
     delete pl;
+}
+
+void rts::game::playerLostAllUnits(player* pl) {
+    assert(pl);
+    assert(activePlayers.find(pl) != activePlayers.end());
+    pl->getClient()->sendToClient({'L'});
+    activePlayers.erase(pl);
 }
 
 unsigned int rts::game::getUnitDamage() const {return unitDamage;}
