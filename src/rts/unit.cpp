@@ -15,9 +15,6 @@ rts::unit::unit(player* owner_, field* field_) : owner(owner_), f(field_) {
 void rts::unit::mine(){
     if (f->hasResource()) {
         f->mine();
-        owner->getClient()->sendToClient({'y'});
-    } else {
-        owner->getClient()->sendToClient({'n'});
     }
 }
 void rts::unit::move(field* field_){
@@ -26,17 +23,11 @@ void rts::unit::move(field* field_){
         this->f->_unit = nullptr;
         this->f = field_;
         field_->_unit = this;
-        owner->getClient()->sendToClient({'y'});
-    } else {
-        owner->getClient()->sendToClient({'n'});
     }
 }
 void rts::unit::attack(unit* target){
     if (std::abs((int)(this->f->x - target->f->x)) + std::abs((int)(this->f->y - target->f->y)) <= 1) {
         target->hp -= 10;
-        owner->getClient()->sendToClient({'y'});
-    } else {
-        owner->getClient()->sendToClient({'n'});
     }
 }
 
