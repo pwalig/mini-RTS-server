@@ -13,8 +13,6 @@ namespace rts {
 
         public:
         board(unsigned int x = 256, unsigned int y = 256);
-
-        std::vector<char> boardStateMessage() const;
         
         field& getField(const unsigned int& xpos, const unsigned int& ypos);
 

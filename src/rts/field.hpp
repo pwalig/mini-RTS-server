@@ -19,5 +19,7 @@ namespace rts {
         const unsigned int x;
         const unsigned int y;
         unit* _unit = nullptr;
+
+        static field invalid;
     };
 }

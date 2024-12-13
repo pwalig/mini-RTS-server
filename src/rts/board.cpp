@@ -12,12 +12,10 @@ rts::board::board(unsigned int X, unsigned int Y) : gen(std::random_device()()) 
     }
 }
 
-std::vector<char> rts::board::boardStateMessage() const {
-    std::vector<char> data;
-    return data;
-}
 rts::field& rts::board::getField(const unsigned int& xpos, const unsigned int& ypos) {
-    return fields[xpos][ypos];
+    if (xpos < fields.size() && ypos < fields[0].size())
+        return fields[xpos][ypos];
+    else return field::invalid;
 }
 
 std::vector<rts::field*> rts::board::resourceFields(bool resource) {
