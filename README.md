@@ -64,7 +64,7 @@ Some messages consist of only type character others contain more data.
 
 ### From server
 
-- `a` - player was sent to game room (in response to: `j`)
+- `g` `<board x dim>` ` ` `<board y dim>` `\n` - player was sent to game room (in response to: `j`), `<board x dim>` and `<board y dim>` are board dimensions
 - `q` - player was sent to queue (in response to: `j`)
 - `y` - client request accepted (in response to: `n`)
 - `n` - client request denied (in response to: `j` or `n`)
@@ -77,7 +77,7 @@ Board state update is sent to all players in the game room in regular time inter
 
 Structure as follows:
 
-`p` ` ` `<amount of players>` `\n`  
+`p` `<amount of players>` `\n`  
 `<player 1 name>` ` ` `<amount of units of player1>` `\n`  
 `<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
 ...  
@@ -85,7 +85,7 @@ Structure as follows:
 `<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
 ...  
 ...  
-`r` ` ` `<amount of fields with resource>` `\n`  
+`r` `<amount of fields with resource>` `\n`  
 `<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
 `<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
 ...

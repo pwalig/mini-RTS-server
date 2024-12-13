@@ -25,5 +25,8 @@ namespace rts {
 
         void spawnResource(unsigned int hp);
         void spawnResources(unsigned int amount, unsigned int hp);
+
+        unsigned int getXdim() const;
+        unsigned int getYdim() const;
     };
 }

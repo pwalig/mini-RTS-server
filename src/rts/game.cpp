@@ -48,7 +48,7 @@ void rts::game::loopLogic(){
     if (rand() % 10 == 0) _board.spawnResource(resourceHp);
 
     // sent updates to clients
-    std::vector<char> buff = {'p', ' '};
+    std::vector<char> buff = {'p'};
     message::appendNumberWDelim(buff, activePlayers.size(), '\n'); // amount of players
 
     // players
@@ -65,7 +65,6 @@ void rts::game::loopLogic(){
 
     // resources
     buff.push_back('r');
-    buff.push_back(' ');
     std::vector<rts::field*> resources = _board.resourceFields(true);
     message::appendNumberWDelim(buff, resources.size(), '\n'); // amount of resources
     for (field* f : resources) {
@@ -100,7 +99,10 @@ void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
     activePlayers.insert(pl);
     pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
-    pl->getClient()->sendToClient({'a'}); // joined active group
+    std::vector<char> buff = {'g'};
+    message::appendNumberWDelim(buff, _board.getXdim(), ' ');
+    message::appendNumberWDelim(buff, _board.getYdim(), '\n');
+    pl->getClient()->sendToClient(buff); // joined active group
 }
 
 void rts::game::addPlayerToQueue(player* pl) {

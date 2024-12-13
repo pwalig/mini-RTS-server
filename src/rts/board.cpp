@@ -13,7 +13,7 @@ rts::board::board(unsigned int X, unsigned int Y) : gen(std::random_device()()) 
 }
 
 rts::field* rts::board::getField(const unsigned int& xpos, const unsigned int& ypos) {
-    if (xpos < fields.size() && ypos < fields[0].size())
+    if (xpos < getXdim() && ypos < getYdim())
         return &fields[xpos][ypos];
     else return nullptr;
 }
@@ -77,3 +77,6 @@ void rts::board::spawnResources(unsigned int amount, unsigned int hp) {
         spawnResource(hp);
     }
 }
+
+unsigned int rts::board::getXdim() const { return fields.size(); }
+unsigned int rts::board::getYdim() const { return fields[0].size(); }
