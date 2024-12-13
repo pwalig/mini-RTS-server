@@ -78,8 +78,6 @@ void message::handler::init(){
 
     messageProcessors['m'] = [](message::handler* mh){
         std::string sx, sy, dx, dy;
-        if (mh->buffer[0] != ' ') return;
-        mh->buffer.pop_front();
         auto it = mh->buffer.begin();
         bool success = mh->tryGetString(sx, it, ' ');
         if (success) success &= mh->tryGetString(sy, it, ' ');
@@ -95,8 +93,6 @@ void message::handler::init(){
 
     messageProcessors['a'] = [](message::handler* mh){
         std::string sx, sy, dx, dy;
-        if (mh->buffer[0] != ' ') return;
-        mh->buffer.pop_front();
         auto it = mh->buffer.begin();
         bool success = mh->tryGetString(sx, it, ' ');
         if (success) success &= mh->tryGetString(sy, it, ' ');
@@ -112,8 +108,6 @@ void message::handler::init(){
 
     messageProcessors['d'] = [](message::handler* mh){
         std::string sx, sy;
-        if (mh->buffer[0] != ' ') return;
-        mh->buffer.pop_front();
         auto it = mh->buffer.begin();
         bool success = mh->tryGetString(sx, it, ' ');
         if (success) success &= mh->tryGetString(sy, it, '\n');
