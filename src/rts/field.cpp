@@ -27,5 +27,3 @@ void rts::field::mine() {
 int rts::field::getHp() const {
     return resourceHp;
 }
-
-rts::field rts::field::invalid = rts::field(std::numeric_limits<unsigned int>::max(), std::numeric_limits<unsigned int>::max());

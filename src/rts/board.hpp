@@ -14,7 +14,7 @@ namespace rts {
         public:
         board(unsigned int x = 256, unsigned int y = 256);
         
-        field& getField(const unsigned int& xpos, const unsigned int& ypos);
+        field* getField(const unsigned int& xpos, const unsigned int& ypos);
 
         std::vector<field*> resourceFields(bool resource);
         std::vector<field*> emptyFields(bool empty);

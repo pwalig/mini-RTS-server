@@ -12,10 +12,10 @@ rts::board::board(unsigned int X, unsigned int Y) : gen(std::random_device()()) 
     }
 }
 
-rts::field& rts::board::getField(const unsigned int& xpos, const unsigned int& ypos) {
+rts::field* rts::board::getField(const unsigned int& xpos, const unsigned int& ypos) {
     if (xpos < fields.size() && ypos < fields[0].size())
-        return fields[xpos][ypos];
-    else return field::invalid;
+        return &fields[xpos][ypos];
+    else return nullptr;
 }
 
 std::vector<rts::field*> rts::board::resourceFields(bool resource) {
@@ -44,11 +44,13 @@ rts::field* rts::board::randomField() {
 }
 rts::field* rts::board::randomEmptyField(bool empty) {
     std::vector<field*> resFields = emptyFields(empty);
+    if (resFields.empty()) return nullptr;
     std::uniform_int_distribution<> distrib(0, resFields.size() - 1);
     return resFields[distrib(gen)];
 }
 rts::field* rts::board::randomResourceField(bool resource) {
     std::vector<field*> resFields = resourceFields(resource);
+    if (resFields.empty()) return nullptr;
     std::uniform_int_distribution<> distrib(0, resFields.size() - 1);
     return resFields[distrib(gen)];
 }

@@ -39,19 +39,32 @@ void rts::player::handleNewMessage(const message::base* msg) {
     else if (msg->typ == message::type::move) {
         const message::move* cmsg = dynamic_cast<const message::move*>(msg);
         assert(cmsg);
-        unit* u = _game->_board.getField(cmsg->sourceX, cmsg->sourceY)._unit;
-        if (u->owner == this) u->move(&_game->_board.getField(cmsg->destX, cmsg->destY));
+        field* f = _game->_board.getField(cmsg->sourceX, cmsg->sourceY);
+        if (!f) return;
+        unit* u = f->_unit;
+        if (!u) return;
+        f = _game->_board.getField(cmsg->destX, cmsg->destY);
+        if (!f) return;
+        if (u->owner == this) u->move(f);
     }
     else if (msg->typ == message::type::attack) {
         const message::attack* cmsg = dynamic_cast<const message::attack*>(msg);
         assert(cmsg);
-        unit* u = _game->_board.getField(cmsg->sourceX, cmsg->sourceY)._unit;
-        if (u->owner == this) u->attack(_game->_board.getField(cmsg->destX, cmsg->destY)._unit);
+        field* f = _game->_board.getField(cmsg->sourceX, cmsg->sourceY);
+        if (!f) return;
+        unit* u = f->_unit;
+        if (!u) return;
+        f = _game->_board.getField(cmsg->destX, cmsg->destY);
+        if (!f) return;
+        if (u->owner == this) u->attack(f->_unit);
     }
     else if (msg->typ == message::type::mine) {
         const message::mine* cmsg = dynamic_cast<const message::mine*>(msg);
         assert(cmsg);
-        unit* u = _game->_board.getField(cmsg->sourceX, cmsg->sourceY)._unit;
+        field* f = _game->_board.getField(cmsg->sourceX, cmsg->sourceY);
+        if (!f) return;
+        unit* u = f->_unit;
+        if (!u) return;
         if (u->owner == this) u->mine();
     }
 }

@@ -26,6 +26,7 @@ void rts::unit::move(field* field_){
     }
 }
 void rts::unit::attack(unit* target){
+    if (target == nullptr) return;
     if (std::abs((int)(this->f->x - target->f->x)) + std::abs((int)(this->f->y - target->f->y)) <= 1) {
         target->hp -= 10;
     }
