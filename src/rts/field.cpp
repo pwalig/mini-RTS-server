@@ -21,8 +21,8 @@ void rts::field::spawnResource(unsigned int hp) {
     resourceHp = (int)hp;
 }
 
-void rts::field::mine() {
-    resourceHp -= 10;
+void rts::field::mine(int dmg) {
+    resourceHp -= dmg;
 }
 
 int rts::field::getHp() const {

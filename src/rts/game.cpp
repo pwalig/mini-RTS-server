@@ -47,6 +47,7 @@ void rts::game::loopLogic(){
     // spawn resource
     if (rand() % 10 == 0) _board.spawnResource(resourceHp);
 
+
     // sent updates to clients
     std::vector<char> buff = {'p'};
     message::appendNumberWDelim(buff, activePlayers.size(), '\n'); // amount of players
@@ -75,6 +76,14 @@ void rts::game::loopLogic(){
 
     for (player* p : activePlayers){
         p->getClient()->sendToClient(buff);
+    }
+    
+    
+    // allow units to move again
+    for (player* p : activePlayers) {
+        for (unit* u : p->units){
+            u->movedThisRound = false;
+        }
     }
 }
 

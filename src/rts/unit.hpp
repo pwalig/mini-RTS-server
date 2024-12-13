@@ -9,6 +9,7 @@ namespace rts {
         unsigned int hp;
         field* f;
         player* const owner;
+        bool movedThisRound = false;
 
         unit(player* owner_, field* field_);
         void mine();

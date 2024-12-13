@@ -18,25 +18,28 @@ rts::unit::unit(player* owner_, field* field_) :
 }
 
 void rts::unit::mine(){
-    if (f->hasResource()) {
-        f->mine();
+    if (!movedThisRound && f->hasResource()) {
+        f->mine(owner->getGame()->getUnitDamage());
         if (f->getHp() <= 0) {
             field* nf = owner->getGame()->_board.closestEmptyField(f);
             if (nf) owner->newUnit(nf);
         }
+        movedThisRound = true;
     }
 }
 void rts::unit::move(field* field_){
-    if (f->distance(*field_) <= 1 && field_->empty()) {
+    if (!movedThisRound && f->distance(*field_) <= 1 && field_->empty()) {
         this->f->_unit = nullptr;
         this->f = field_;
         field_->_unit = this;
+        movedThisRound = true;
     }
 }
 void rts::unit::attack(unit* target){
     if (target == nullptr) return;
-    if (f->distance(*(target->f)) <= 1) {
+    if (!movedThisRound && f->distance(*(target->f)) <= 1) {
         target->recvDamage(owner->getGame()->getUnitDamage());
+        movedThisRound = true;
     }
 }
 
