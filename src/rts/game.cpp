@@ -101,7 +101,8 @@ void rts::game::addPlayerToRoom(player* pl) {
     pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
     std::vector<char> buff = {'g'};
     message::appendNumberWDelim(buff, _board.getXdim(), ' ');
-    message::appendNumberWDelim(buff, _board.getYdim(), '\n');
+    message::appendNumberWDelim(buff, _board.getYdim(), ' ');
+    message::appendNumberWDelim(buff, unitsToWin, '\n');
     pl->getClient()->sendToClient(buff); // joined active group
 }
 
