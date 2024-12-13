@@ -64,7 +64,6 @@ Some messages consist of only type character others contain more data.
 
 ### From server
 
-- `i` - server could not match message type sent by client with any of the available ones
 - `a` - player was sent to game room (in response to: `j`)
 - `q` - player was sent to queue (in response to: `j`)
 - `y` - client request accepted (in response to: `n`)
