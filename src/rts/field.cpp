@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <limits>
+#include <algorithm>
 
 #include <rts/unit.hpp>
 
@@ -15,9 +16,9 @@ bool rts::field::hasResource() const {
     return (resourceHp > 0);
 }
 
-void rts::field::spawnResource() {
+void rts::field::spawnResource(unsigned int hp) {
     assert(!hasResource());
-    resourceHp = 100;
+    resourceHp = (int)hp;
 }
 
 void rts::field::mine() {
@@ -26,4 +27,8 @@ void rts::field::mine() {
 
 int rts::field::getHp() const {
     return resourceHp;
+}
+
+unsigned int rts::field::distance(const field& other) const {
+    return std::abs((int)x - (int)other.x) + std::abs((int)y - (int)other.y);
 }

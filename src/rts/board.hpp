@@ -21,8 +21,9 @@ namespace rts {
         field* randomField();
         field* randomEmptyField(bool empty);
         field* randomResourceField(bool resource);
+        field* closestEmptyField(const field* source);
 
-        void spawnResource();
-        void spawnResources(const unsigned int& amount);
+        void spawnResource(unsigned int hp);
+        void spawnResources(unsigned int amount, unsigned int hp);
     };
 }

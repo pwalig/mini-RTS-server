@@ -31,6 +31,7 @@ unsigned int& rts::game::property(const std::string& name) {
     if (name == "millis") return millis;
     if (name == "boardX") return boardX;
     if (name == "boardY") return boardY;
+    if (name == "resourceHp") return resourceHp;
     throw std::logic_error("invalid property name");
 }
 
@@ -41,7 +42,7 @@ void rts::game::handleNewClient(client* client_) {
 
 void rts::game::loopLogic(){
     // spawn resource
-    if (rand() % 10 == 0) _board.spawnResource();
+    if (rand() % 10 == 0) _board.spawnResource(resourceHp);
 
     // sent updates to clients
     std::vector<char> buff = {'p', ' '};
@@ -85,7 +86,7 @@ void rts::game::clearRoom() {
 
 void rts::game::startGame() {
     _board = board(boardX, boardY); // reset board
-    _board.spawnResources(startResources);
+    _board.spawnResources(startResources, resourceHp);
     while(!queuedPlayers.empty() && activePlayers.size() < maxPlayers){
         moveQueuedPlayerToRoom();
     }

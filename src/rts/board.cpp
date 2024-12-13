@@ -54,13 +54,26 @@ rts::field* rts::board::randomResourceField(bool resource) {
     std::uniform_int_distribution<> distrib(0, resFields.size() - 1);
     return resFields[distrib(gen)];
 }
-
-void rts::board::spawnResource() {
-    randomResourceField(false)->spawnResource();
+rts::field* rts::board::closestEmptyField(const field* source) {
+    unsigned int minDist = std::numeric_limits<unsigned int>::max();
+    field* candidate = nullptr;
+    std::vector<field*> available = emptyFields(true);
+    for (field* f : available) {
+        unsigned int dist = source->distance(*f);
+        if (dist < minDist) {
+            minDist = dist;
+            candidate = f;
+        }
+    }
+    return candidate;
 }
 
-void rts::board::spawnResources(const unsigned int& amount) {
+void rts::board::spawnResource(unsigned int hp) {
+    randomResourceField(false)->spawnResource(hp);
+}
+
+void rts::board::spawnResources(unsigned int amount, unsigned int hp) {
     for (unsigned int i = 0; i < amount; ++i) {
-        spawnResource();
+        spawnResource(hp);
     }
 }

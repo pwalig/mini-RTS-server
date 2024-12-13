@@ -21,6 +21,7 @@ namespace rts {
         unsigned int startResources = 25;
         unsigned int boardX = 256;
         unsigned int boardY = 256;
+        unsigned int resourceHp = 100;
 
         void handleNewClient(client* client_);
         void loopLogic();

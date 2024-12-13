@@ -5,6 +5,7 @@
 
 #include <rts/field.hpp>
 #include <rts/player.hpp>
+#include <rts/game.hpp>
 
 rts::unit::unit(player* owner_, field* field_) : owner(owner_), f(field_) {
     printf("%s got new unit\n", owner->getName().c_str());
@@ -15,6 +16,10 @@ rts::unit::unit(player* owner_, field* field_) : owner(owner_), f(field_) {
 void rts::unit::mine(){
     if (f->hasResource()) {
         f->mine();
+        if (f->getHp() <= 0) {
+            field* nf = owner->getGame()->_board.closestEmptyField(f);
+            if (nf) owner->newUnit(nf);
+        }
     }
 }
 void rts::unit::move(field* field_){

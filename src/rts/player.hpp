@@ -34,6 +34,7 @@ namespace rts {
         ~player();
 
         client* getClient() const;
+        game* getGame() const;
         std::string getName() const;
 
         static bool nameTaken(const std::string& name);

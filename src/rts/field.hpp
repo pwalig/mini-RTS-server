@@ -11,10 +11,12 @@ namespace rts {
 
         bool empty() const;
         bool hasResource() const;
-        void spawnResource();
+        void spawnResource(unsigned int hp);
         void mine();
 
         int getHp() const;
+
+        unsigned int distance(const field& other) const;
         
         const unsigned int x;
         const unsigned int y;

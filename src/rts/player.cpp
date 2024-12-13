@@ -89,6 +89,7 @@ void rts::player::reName(const std::string& name) {
 std::string rts::player::getName() const { return _name; }
 
 client* rts::player::getClient() const { return _client; }
+rts::game* rts::player::getGame() const { return _game; }
 
 void rts::player::removeName(const std::string& name) {
     assert(playersByName.find(name) != playersByName.end());
