@@ -1,5 +1,6 @@
 #include <msg/handler.hpp>
 #include <string>
+#include <stdexcept>
 #include <msg/name.hpp>
 #include <msg/unitCommands.hpp>
 
@@ -52,6 +53,31 @@ bool message::handler::tryGetString(std::string& str, std::deque<char>::iterator
     return false;
 }
 
+bool message::handler::tryGetInt(int& i, std::deque<char>::iterator& it, char delim) {
+    std::string str;
+    if (!tryGetString(str, it, delim)) return false;
+    
+    try
+    {
+        i = std::stoi(str);
+        return true;
+    }
+    catch (std::invalid_argument const& ex)
+    {
+        buffer.erase(buffer.begin(), it);
+        msgType = '?';
+        return false;
+    }
+    catch (std::out_of_range const& ex)
+    {
+        buffer.erase(buffer.begin(), it);
+        msgType = '?';
+        return false;
+    }
+
+    return true;
+}
+
 void message::handler::init(){
     messageProcessors['n'] = [](message::handler* mh){
         std::string name;
@@ -77,14 +103,14 @@ void message::handler::init(){
     };
 
     messageProcessors['m'] = [](message::handler* mh){
-        std::string sx, sy, dx, dy;
+        int sx, sy, dx, dy;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetString(sx, it, ' ');
-        if (success) success &= mh->tryGetString(sy, it, ' ');
-        if (success) success &= mh->tryGetString(dx, it, ' ');
-        if (success) success &= mh->tryGetString(dy, it, '\n');
+        bool success = mh->tryGetInt(sx, it, ' ');
+        if (success) success &= mh->tryGetInt(sy, it, ' ');
+        if (success) success &= mh->tryGetInt(dx, it, ' ');
+        if (success) success &= mh->tryGetInt(dy, it, '\n');
         if (success) {
-            message::move msg(atoi(dx.c_str()), atoi(dy.c_str()), atoi(sx.c_str()), atoi(sy.c_str()));
+            message::move msg(dx, dy, sx, sy);
             mh->onNewMessage(&msg);
             mh->buffer.erase(mh->buffer.begin(), it);
             mh->msgType = '?';
@@ -92,14 +118,14 @@ void message::handler::init(){
     };
 
     messageProcessors['a'] = [](message::handler* mh){
-        std::string sx, sy, dx, dy;
+        int sx, sy, dx, dy;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetString(sx, it, ' ');
-        if (success) success &= mh->tryGetString(sy, it, ' ');
-        if (success) success &= mh->tryGetString(dx, it, ' ');
-        if (success) success &= mh->tryGetString(dy, it, '\n');
+        bool success = mh->tryGetInt(sx, it, ' ');
+        if (success) success &= mh->tryGetInt(sy, it, ' ');
+        if (success) success &= mh->tryGetInt(dx, it, ' ');
+        if (success) success &= mh->tryGetInt(dy, it, '\n');
         if (success) {
-            message::attack msg(atoi(dx.c_str()), atoi(dy.c_str()), atoi(sx.c_str()), atoi(sy.c_str()));
+            message::attack msg(dx, dy, sx, sy);
             mh->onNewMessage(&msg);
             mh->buffer.erase(mh->buffer.begin(), it);
             mh->msgType = '?';
@@ -107,12 +133,12 @@ void message::handler::init(){
     };
 
     messageProcessors['d'] = [](message::handler* mh){
-        std::string sx, sy;
+        int sx, sy;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetString(sx, it, ' ');
-        if (success) success &= mh->tryGetString(sy, it, '\n');
+        bool success = mh->tryGetInt(sx, it, ' ');
+        if (success) success &= mh->tryGetInt(sy, it, '\n');
         if (success) {
-            message::mine msg(atoi(sx.c_str()), atoi(sy.c_str()));
+            message::mine msg(sx, sy);
             mh->onNewMessage(&msg);
             mh->buffer.erase(mh->buffer.begin(), it);
             mh->msgType = '?';

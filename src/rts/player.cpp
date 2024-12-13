@@ -27,9 +27,6 @@ void rts::player::handleNewMessage(const message::base* msg) {
         else if (_name == "") setName(cmsg->_name);
         else reName(cmsg->_name);
     }
-    else if (msg->typ == message::type::invalid) {
-        _client->sendToClient({'i'}); // invalid message
-    }
     else if (msg->typ == message::type::disconnect) {
         _game->deletePlayer(this);
     }
