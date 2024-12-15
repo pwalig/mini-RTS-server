@@ -122,7 +122,7 @@ void rts::game::addPlayerToRoom(player* pl) {
 
 void rts::game::addPlayerToQueue(player* pl) {
     queuedPlayers.push_back(pl);
-    pl->getClient()->sendToClient({'q'}); // put into queue
+    pl->getClient()->sendToClient({'q','\n'}); // put into queue
 }
 
 void rts::game::moveQueuedPlayerToRoom() {
@@ -158,7 +158,7 @@ void rts::game::tryJoin(player* pl){
     || activePlayers.find(pl) != activePlayers.end()
     || std::find(queuedPlayers.begin(), queuedPlayers.end(), pl) != queuedPlayers.end()
     ) {
-        pl->getClient()->sendToClient({'n'}); // client unnamed
+        pl->getClient()->sendToClient({'n','\n'}); // client unnamed
     }
     else if (activePlayers.size() < maxPlayers) {
         if (activePlayers.empty()) startGame();
@@ -178,15 +178,15 @@ void rts::game::deletePlayer(player* pl){
 void rts::game::playerLostAllUnits(player* pl) {
     assert(pl);
     assert(activePlayers.find(pl) != activePlayers.end());
-    pl->getClient()->sendToClient({'L'});
+    pl->getClient()->sendToClient({'L','\n'});
     removePlayerFromRoomOrQueue(pl);
 }
 
 void rts::game::tryWin(player* pl){
     if (pl->units.size() >= unitsToWin) {
-        pl->getClient()->sendToClient({'W'});
+        pl->getClient()->sendToClient({'W','\n'});
         for (player* p : activePlayers){
-            if (p != pl) p->getClient()->sendToClient({'L'});
+            if (p != pl) p->getClient()->sendToClient({'L','\n'});
         }
 
         clearRoom();
