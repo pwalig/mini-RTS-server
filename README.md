@@ -89,7 +89,7 @@ Structure as follows:
 `<player 1 name>` ` ` `<amount of units of player1>` `,`  
 `<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `,`  
 ...  
-`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `;`  
+`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `,` `;`  
 ...  
 `<player N name>` ` ` `<amount of units of playerN>` `,`  
 `<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `,`  
