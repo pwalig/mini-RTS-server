@@ -14,6 +14,7 @@ namespace rts {
 
     class player {
     private:
+        unsigned int nextId = 0;
         game* _game;
         message::handler mh;
         std::string _name = "";

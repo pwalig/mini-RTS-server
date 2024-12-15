@@ -7,9 +7,9 @@
 #include <rts/player.hpp>
 #include <rts/game.hpp>
 
-rts::unit::unit(player* owner_, field* field_) :
+rts::unit::unit(player* owner_, field* field_, unsigned int id_) :
     owner(owner_),
-    f(field_),
+    f(field_), id(id_),
     hp(owner_->getGame()->getUnitHp())
 {
     printf("%s got new unit\n", owner->getName().c_str());

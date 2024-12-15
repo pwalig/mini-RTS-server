@@ -58,6 +58,7 @@ void rts::game::loopLogic(){
         message::appendNumberWDelim(buff, p->units.size(), '\n'); // amount of units
         
         for (unit* u : p->units) {
+            message::appendNumberWDelim(buff, u->id, ' ');
             message::appendNumberWDelim(buff, u->f->x, ' ');
             message::appendNumberWDelim(buff, u->f->y, ' ');
             message::appendNumberWDelim(buff, u->hp, '\n');
