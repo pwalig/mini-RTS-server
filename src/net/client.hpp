@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include <string>
+#include <cstring>
 
 class server;
 
@@ -12,7 +13,7 @@ class client {
 private:
     int _fd;
     server* owner; // server to which this client is connected to
-    sockaddr_storage clientAddr{0};
+    sockaddr_storage clientAddr;
     socklen_t clientAddrSize;
 
     static const unsigned long bufsiz;

@@ -15,10 +15,10 @@ namespace rts {
     class player {
     private:
         unsigned int nextId = 0;
-        game* _game;
-        message::handler mh;
         std::string _name = "";
         client* _client;
+        message::handler mh;
+        game* _game;
 
         void handleNewMessage(const message::base* msg);
         

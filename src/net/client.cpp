@@ -6,7 +6,7 @@
 
 const unsigned long client::bufsiz = 256;
 
-client::client(server* server_) : owner(server_), clientAddrSize(sizeof(clientAddr)) {
+client::client(server* server_) : owner(server_), clientAddr(), clientAddrSize(sizeof(clientAddr)) {
 
     // accept new connection
     _fd = accept(server_->fd(), (sockaddr *)&clientAddr, &clientAddrSize);
@@ -70,10 +70,9 @@ void client::sendToClient(const std::vector<char>& data) {
 }
 
 void client::sendFromBuffer(){
-
-    int n = send(_fd, buffer.data(), buffer.size(), MSG_DONTWAIT);
-    if (n == -1) return;
-    if (n == buffer.size()) { // all sent
+    long n = send(_fd, buffer.data(), buffer.size(), MSG_DONTWAIT);
+    if (n <= -1) return;
+    if ((unsigned long)n == buffer.size()) { // all sent
         buffer.clear();
         epoll_event ee = inEvent();
         epoll_ctl(owner->epollFd(), EPOLL_CTL_MOD, _fd, &ee); // remove EPOLLOUT event
