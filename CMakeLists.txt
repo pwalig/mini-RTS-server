@@ -4,5 +4,6 @@ project(mini-rts-server)
 include_directories(src)
 configure_file(config.txt config.txt)
 
+add_compile_options(-Wall -Wextra)
 add_executable(mini-rts-server)
 add_subdirectory(src)
