@@ -50,30 +50,34 @@ void rts::game::loopLogic(){
 
     // sent updates to clients
     std::vector<char> buff = {'p'};
-    message::appendNumberWDelim(buff, activePlayers.size(), '\n'); // amount of players
+    message::appendNumberWDelim(buff, activePlayers.size(), ';'); // amount of players
 
     // players
     for (player* p : activePlayers) {
         message::appendStringWDelim(buff, p->getName(), ' '); // player name
-        message::appendNumberWDelim(buff, p->units.size(), '\n'); // amount of units
+        message::appendNumberWDelim(buff, p->units.size(), ','); // amount of units
         
         for (unit* u : p->units) {
             message::appendNumberWDelim(buff, u->id, ' ');
             message::appendNumberWDelim(buff, u->f->x, ' ');
             message::appendNumberWDelim(buff, u->f->y, ' ');
-            message::appendNumberWDelim(buff, u->hp, '\n');
+            message::appendNumberWDelim(buff, u->hp, ',');
         }
+
+        buff.push_back(';');
     }
+    buff.push_back('\n');
 
     // resources
     buff.push_back('r');
     std::vector<rts::field*> resources = _board.resourceFields(true);
-    message::appendNumberWDelim(buff, resources.size(), '\n'); // amount of resources
+    message::appendNumberWDelim(buff, resources.size(), ';'); // amount of resources
     for (field* f : resources) {
         message::appendNumberWDelim(buff, f->x, ' ');
         message::appendNumberWDelim(buff, f->y, ' ');
-        message::appendNumberWDelim(buff, f->getHp(), '\n');
+        message::appendNumberWDelim(buff, f->getHp(), ';');
     }
+    buff.push_back('\n');
 
     for (player* p : activePlayers){
         p->getClient()->sendToClient(buff);
@@ -118,7 +122,7 @@ void rts::game::addPlayerToRoom(player* pl) {
 
 void rts::game::addPlayerToQueue(player* pl) {
     queuedPlayers.push_back(pl);
-    pl->getClient()->sendToClient({'q'}); // put into queue
+    pl->getClient()->sendToClient({'q','\n'}); // put into queue
 }
 
 void rts::game::moveQueuedPlayerToRoom() {
@@ -154,7 +158,7 @@ void rts::game::tryJoin(player* pl){
     || activePlayers.find(pl) != activePlayers.end()
     || std::find(queuedPlayers.begin(), queuedPlayers.end(), pl) != queuedPlayers.end()
     ) {
-        pl->getClient()->sendToClient({'n'}); // client unnamed
+        pl->getClient()->sendToClient({'n','\n'}); // client unnamed
     }
     else if (activePlayers.size() < maxPlayers) {
         if (activePlayers.empty()) startGame();
@@ -174,15 +178,15 @@ void rts::game::deletePlayer(player* pl){
 void rts::game::playerLostAllUnits(player* pl) {
     assert(pl);
     assert(activePlayers.find(pl) != activePlayers.end());
-    pl->getClient()->sendToClient({'L'});
+    pl->getClient()->sendToClient({'L','\n'});
     removePlayerFromRoomOrQueue(pl);
 }
 
 void rts::game::tryWin(player* pl){
     if (pl->units.size() >= unitsToWin) {
-        pl->getClient()->sendToClient({'W'});
+        pl->getClient()->sendToClient({'W','\n'});
         for (player* p : activePlayers){
-            if (p != pl) p->getClient()->sendToClient({'L'});
+            if (p != pl) p->getClient()->sendToClient({'L','\n'});
         }
 
         clearRoom();

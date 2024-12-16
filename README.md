@@ -64,8 +64,8 @@ Some messages consist of only type character others contain more data.
 ### From client
 
 - `n` `<name>` `\n` - set name or rename self
-- `j` - request join (player will be sent to game room or queue)
-- `q` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
+- `j` `\n` - request join (player will be sent to game room or queue)
+- `q` `\n` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
 - `m` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` designate destination)
 - `a` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` coordinates of the target unit) (possible to attack own units)
 - `d` `<x1>` ` ` `<y1>` `\n` - request unit to mine the resource (`<x1><y1>` are coordinates of the unit) (unit can only mine resource that it is standing on)
@@ -73,11 +73,11 @@ Some messages consist of only type character others contain more data.
 ### From server
 
 - `g` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` `\n` - player was sent to game room (in response to: `j`), `<board x dim>`, `<board y dim>` and `<unitsToWin>` same as in `[config file]`
-- `q` - player was sent to queue (in response to: `j`)
-- `y` - client request accepted (in response to: `n`)
-- `n` - client request denied (in response to: `j` or `n`)
-- `L` - client lost the game (and was moved out of game room)
-- `W` - client won the game (and was moved out of game room)
+- `q` `\n` - player was sent to queue (in response to: `j`)
+- `y` `\n` - client request accepted (in response to: `n`)
+- `n` `\n` - client request denied (in response to: `j` or `n`)
+- `L` `\n` - client lost the game (and was moved out of game room)
+- `W` `\n` - client won the game (and was moved out of game room)
  
 ### Board state update
 
@@ -85,17 +85,21 @@ Board state update is sent to all players in the game room in regular time inter
 
 Structure as follows:
 
-`p` `<amount of players>` `\n`  
-`<player 1 name>` ` ` `<amount of units of player1>` `\n`  
-`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
+`p` `<amount of players>` `;`  
+`<player 1 name>` ` ` `<amount of units of player1>` `,`  
+`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `,`  
 ...  
-`<player 2 name>` ` ` `<amount of units of player1>` `\n`  
-`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
+`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `,` `;`  
+...  
+`<player N name>` ` ` `<amount of units of playerN>` `,`  
+`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `,`  
+...  
+`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `,` `;` `\n`  
 ...  
 ...  
-`r` `<amount of fields with resource>` `\n`  
-`<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
-`<x posion>` ` ` `<y position>` ` ` `<hp>` `\n`  
+`r` `<amount of fields with resource>` `;`  
+`<x posion>` ` ` `<y position>` ` ` `<hp>` `;`  
+`<x posion>` ` ` `<y position>` ` ` `<hp>` `;` `\n`  
 ...
 
 Numbers are represented as strings of characters (97 ---> "97" not 'a').
