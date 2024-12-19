@@ -106,7 +106,7 @@ void rts::player::removeAllUnits(){
 }
 
 void rts::player::newUnit(field* field_){
-    units.insert(new unit(this, field_, nextId++));
+    units.insert(new unit(this, field_, _game->getNextUnitId()));
     _game->tryWin(this);
 }
 

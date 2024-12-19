@@ -26,6 +26,8 @@ namespace rts {
         unsigned int unitDamage = 10;
         unsigned int unitsToWin = 50;
 
+        unsigned int nextUnitId = 0;
+
         void handleNewClient(client* client_);
         void loopLogic();
         void clearRoom();
@@ -63,6 +65,7 @@ namespace rts {
 
         unsigned int getUnitHp() const;
         unsigned int getUnitDamage() const;
+        unsigned int getNextUnitId();
 
         ~game();
     };

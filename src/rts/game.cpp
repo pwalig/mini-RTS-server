@@ -198,6 +198,10 @@ void rts::game::tryWin(player* pl){
 unsigned int rts::game::getUnitDamage() const {return unitDamage;}
 unsigned int rts::game::getUnitHp() const {return unitHp;}
 
+unsigned int rts::game::getNextUnitId() {
+    return nextUnitId++;
+}
+
 rts::game::~game() {
     for (player* p : allPlayers){
         delete p;
