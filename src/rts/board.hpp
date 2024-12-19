@@ -15,6 +15,7 @@ namespace rts {
         board(unsigned int x = 256, unsigned int y = 256);
         
         field* getField(const unsigned int& xpos, const unsigned int& ypos);
+        const field* getConstField(const unsigned int& xpos, const unsigned int& ypos) const;
 
         std::vector<field*> resourceFields(bool resource);
         std::vector<field*> emptyFields(bool empty);

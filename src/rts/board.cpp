@@ -17,6 +17,11 @@ rts::field* rts::board::getField(const unsigned int& xpos, const unsigned int& y
         return &fields[xpos][ypos];
     else return nullptr;
 }
+const rts::field* rts::board::getConstField(const unsigned int& xpos, const unsigned int& ypos) const {
+    if (xpos < getXdim() && ypos < getYdim())
+        return &fields[xpos][ypos];
+    else return nullptr;
+}
 
 std::vector<rts::field*> rts::board::resourceFields(bool resource) {
     std::vector<field*> out;
