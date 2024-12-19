@@ -1,33 +1,35 @@
 #pragma once
 
-#include <msg/base.hpp>
+#include <msg/addressUnit.hpp>
 
 namespace message {
-    class move : public base {
+    class move : public addressUnitByCoordinates {
         public:
         const unsigned int destX;
         const unsigned int destY;
-        const unsigned int sourceX;
-        const unsigned int sourceY;
 
-        move(unsigned int dx, unsigned int dy, unsigned int sx, unsigned int sy);
+        move(
+            unsigned int dx, unsigned int dy,
+            unsigned int sx, unsigned int sy
+            ) : addressUnitByCoordinates(sx, sy), destX(dx), destY(dy) {}
     };
     
-    class attack : public base {
+    class attack : public addressUnitByCoordinates {
         public:
         const unsigned int destX;
         const unsigned int destY;
-        const unsigned int sourceX;
-        const unsigned int sourceY;
 
-        attack(unsigned int dx, unsigned int dy, unsigned int sx, unsigned int sy);
+        attack(
+            unsigned int dx, unsigned int dy,
+            unsigned int sx, unsigned int sy
+            ) : addressUnitByCoordinates(sx, sy), destX(dx), destY(dy) {}
     };
     
-    class mine : public base {
+    class mine : public addressUnitByCoordinates {
         public:
-        const unsigned int sourceX;
-        const unsigned int sourceY;
 
-        mine(unsigned int sx, unsigned int sy);
+        mine(
+            unsigned int sx, unsigned int sy
+            ) : addressUnitByCoordinates(sx, sy) {}
     };
 }

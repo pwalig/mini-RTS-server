@@ -7,7 +7,7 @@
 namespace message {
     class name : public base {
     public:
-        std::string _name;
-        name(const std::string& name_);
+        const std::string _name;
+        name(const std::string& name_) : base(), _name(name_) {}
     };
 }

@@ -6,6 +6,7 @@
 #include <msg/unitCommands.hpp>
 #include <rts/game.hpp>
 #include <rts/unit.hpp>
+#include <msg/state.hpp>
 
 std::unordered_map<std::string, rts::player*> rts::player::playersByName;
 
@@ -18,28 +19,26 @@ rts::player::player(game* game_, client* client_) : _client(client_), mh(client_
 }
 
 void rts::player::handleNewMessage(const message::base* msg) {
-    if (msg->typ == message::type::name){
-        const message::name* cmsg = dynamic_cast<const message::name*>(msg);
-        assert(cmsg);
+    if (const message::name* cmsg = dynamic_cast<const message::name*>(msg)){
         if (cmsg->_name != _name && nameTaken(cmsg->_name)) { // other player has that name
             _client->sendToClient({'n','\n'}); // name taken
         }
         else if (_name == "") setName(cmsg->_name);
         else reName(cmsg->_name);
     }
-    else if (msg->typ == message::type::disconnect) {
+    else if (const message::state* cmsg = dynamic_cast<const message::state*>(msg)) {
+        if (cmsg->act == message::state::action::disconnect) {
         _game->deletePlayer(this);
+        }
+        else if (cmsg->act == message::state::action::joinRequest) {
+            _game->tryJoin(this);
+        }
+        else if (cmsg->act == message::state::action::quit) {
+            _game->removePlayerFromRoomOrQueue(this);
+        }
     }
-    else if (msg->typ == message::type::joinRequest) {
-        _game->tryJoin(this);
-    }
-    else if (msg->typ == message::type::quit) {
-        _game->removePlayerFromRoomOrQueue(this);
-    }
-    else if (msg->typ == message::type::move) {
-        const message::move* cmsg = dynamic_cast<const message::move*>(msg);
-        assert(cmsg);
-        field* f = _game->_board.getField(cmsg->sourceX, cmsg->sourceY);
+    else if (const message::move* cmsg = dynamic_cast<const message::move*>(msg)) {
+        field* f = _game->_board.getField(cmsg->x, cmsg->y);
         if (!f) return;
         unit* u = f->_unit;
         if (!u) return;
@@ -47,10 +46,8 @@ void rts::player::handleNewMessage(const message::base* msg) {
         if (!f) return;
         if (u->owner == this) u->move(f);
     }
-    else if (msg->typ == message::type::attack) {
-        const message::attack* cmsg = dynamic_cast<const message::attack*>(msg);
-        assert(cmsg);
-        field* f = _game->_board.getField(cmsg->sourceX, cmsg->sourceY);
+    else if (const message::attack* cmsg = dynamic_cast<const message::attack*>(msg)) {
+        field* f = _game->_board.getField(cmsg->x, cmsg->y);
         if (!f) return;
         unit* u = f->_unit;
         if (!u) return;
@@ -58,10 +55,8 @@ void rts::player::handleNewMessage(const message::base* msg) {
         if (!f) return;
         if (u->owner == this) u->attack(f->_unit);
     }
-    else if (msg->typ == message::type::mine) {
-        const message::mine* cmsg = dynamic_cast<const message::mine*>(msg);
-        assert(cmsg);
-        field* f = _game->_board.getField(cmsg->sourceX, cmsg->sourceY);
+    else if (const message::mine* cmsg = dynamic_cast<const message::mine*>(msg)) {
+        field* f = _game->_board.getField(cmsg->x, cmsg->y);
         if (!f) return;
         unit* u = f->_unit;
         if (!u) return;

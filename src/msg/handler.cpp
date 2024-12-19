@@ -3,13 +3,14 @@
 #include <stdexcept>
 #include <msg/name.hpp>
 #include <msg/unitCommands.hpp>
+#include <msg/state.hpp>
 
 std::unordered_map<char, std::function<void(message::handler*)>> message::handler::messageProcessors;
 
 message::handler::handler(client* client_) : _client(client_) {
     _client->onReceive = std::bind(&message::handler::handle, this, std::placeholders::_1);
     _client->onDisconnect = [this](){
-        message::base msg(type::disconnect);
+        message::state msg(state::action::disconnect);
         this->onNewMessage(&msg);
         };
 }
@@ -30,7 +31,7 @@ void message::handler::handle(const std::vector<char>& stream) {
         }
 
         if (messageProcessors.find(msgType) == messageProcessors.end()){
-            message::base msg(type::invalid);
+            message::base msg;
             onNewMessage(&msg);
             msgType = '?';
         }
@@ -91,13 +92,13 @@ void message::handler::init(){
     };
 
     messageProcessors['j'] = [](message::handler* mh){
-        message::base msg(type::joinRequest);
+        message::state msg(state::action::joinRequest);
         mh->onNewMessage(&msg);
         mh->msgType = '?';
     };
 
     messageProcessors['q'] = [](message::handler* mh){
-        message::base msg(type::quit);
+        message::state msg(state::action::quit);
         mh->onNewMessage(&msg);
         mh->msgType = '?';
     };
