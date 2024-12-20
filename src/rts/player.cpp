@@ -23,6 +23,7 @@ void rts::player::handleNewMessage(const message::base* msg) {
         if (cmsg->_name != _name && nameTaken(cmsg->_name)) { // other player has that name
             _client->sendToClient({'n','\n'}); // name taken
         }
+        else if (!_game->nameValid(cmsg->_name)) _client->sendToClient({'n','\n'}); // invalid name
         else if (_name == "") setName(cmsg->_name);
         else reName(cmsg->_name);
     }

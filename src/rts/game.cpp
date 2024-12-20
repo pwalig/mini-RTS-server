@@ -202,6 +202,14 @@ unsigned int rts::game::getNextUnitId() {
     return nextUnitId++;
 }
 
+bool rts::game::nameValid(const std::string& name) const {
+    for (char c : name){
+        if (c < 'A') return false;
+        if (c > 'z') return false;
+    }
+    return true;
+}
+
 rts::game::~game() {
     for (player* p : allPlayers){
         delete p;

@@ -66,6 +66,7 @@ namespace rts {
         unsigned int getUnitHp() const;
         unsigned int getUnitDamage() const;
         unsigned int getNextUnitId();
+        bool nameValid(const std::string& name) const;
 
         ~game();
     };
