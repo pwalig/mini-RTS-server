@@ -73,10 +73,12 @@ std::vector<char> rts::game::boardStateMessage() const {
 
         buff.push_back(';');
     }
+    printf("BEGIN\n");
     buff.push_back('\n');
-
+    printf("END1\n");
     // resources
     buff.push_back('r');
+    printf("END2\n");
     std::vector<const rts::field*> resources = _board.constResourceFields(true);
     message::appendNumberWDelim(buff, resources.size(), ';'); // amount of resources
     for (const field* f : resources) {
@@ -91,17 +93,7 @@ std::vector<char> rts::game::boardStateMessage() const {
 std::vector<char> rts::game::newPlayerMessage(const player* p) const{
     std::vector<char> buff = {'j'};
     
-    message::appendStringWDelim(buff, p->getName(), ' '); // player name
-    message::appendNumberWDelim(buff, p->units.size(), ';'); // amount of units
-    
-    for (unit* u : p->units) {
-        message::appendNumberWDelim(buff, u->id, ' ');
-        message::appendNumberWDelim(buff, u->f->x, ' ');
-        message::appendNumberWDelim(buff, u->f->y, ' ');
-        message::appendNumberWDelim(buff, u->hp, ';');
-    }
-
-    buff.push_back('\n');
+    message::appendStringWDelim(buff, p->getName(), '\n'); // player name
 
     return buff;
 }
@@ -169,8 +161,8 @@ void rts::game::startGame() {
 
 void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
-    pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
     sendToPlayers(activePlayers, newPlayerMessage(pl));
+    pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
     activePlayers.insert(pl);
     pl->getClient()->sendToClient(boardStateMessage());
 }

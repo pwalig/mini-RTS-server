@@ -26,7 +26,7 @@ namespace rts {
         field* closestEmptyField(const field* source);
 
         field* spawnResource(unsigned int hp);
-        std::vector<field*> spawnResources(unsigned int amount, unsigned int hp);
+        void spawnResources(unsigned int amount, unsigned int hp);
 
         unsigned int getXdim() const;
         unsigned int getYdim() const;

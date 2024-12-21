@@ -3,6 +3,7 @@
 #include <cassert>
 #include <limits>
 #include <algorithm>
+#include <stdio.h>
 
 #include <rts/unit.hpp>
 
@@ -19,6 +20,7 @@ bool rts::field::hasResource() const {
 rts::field* rts::field::spawnResource(unsigned int hp) {
     assert(!hasResource());
     resourceHp = (int)hp;
+    printf("spawned resource at: %d, %d\n", x, y);
     return this;
 }
 

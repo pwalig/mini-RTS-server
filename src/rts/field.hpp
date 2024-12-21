@@ -14,7 +14,7 @@ namespace rts {
 
         // @returns this field
         rts::field* spawnResource(unsigned int hp);
-        
+
         // @returns this field
         rts::field* mine(int dmg);
 

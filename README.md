@@ -77,10 +77,7 @@ Some messages consist of only type character others contain more data.
 ### From server
 
 - `c` `<millis>` ` ` `<maxPlayers>` ` ` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` ` ` `<startResources>` ` ` `<resourceHp>` ` ` `<unitHp>` ` ` `<unitDamage>` ` ` `<allowedNameCharacters>` `\n` - whole server configuration sent to newly joined clients
-- `j` `<player name>` ` ` `<amount of units of player>` `;`  
-`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `;`  
-...  
-`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `;` `\n` - new player has joined
+- `j` `<player name>` `\n` - new player has joined the game room
 - `l` `<player name>` `\n` - player `<player name>` has either left or lost the game
 - `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - unit of id `<id>` has moved to `<x>;<y>`
 - `a` `<id1>` ` ` `<id2>` `\n` - unit of id `<id1>` attacked unit of id `<id2>`

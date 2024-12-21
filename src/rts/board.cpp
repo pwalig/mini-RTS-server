@@ -27,7 +27,13 @@ std::vector<rts::field*> rts::board::resourceFields(bool resource) {
     std::vector<field*> out;
     for (std::vector<field>& row : fields){
         for (field& f : row) {
-            if (f.hasResource() == resource) out.push_back(&f);
+            if (f.hasResource() == resource) {
+                printf("begin\n");
+                printf("%d, %d ", (int)out.size(), (int)out.capacity());
+                out.push_back(&f);
+                printf("y\n");
+                printf("end\n");
+            }
         }
     }
     return out;
@@ -87,12 +93,16 @@ rts::field* rts::board::spawnResource(unsigned int hp) {
     return randomResourceField(false)->spawnResource(hp);
 }
 
-std::vector<rts::field*> rts::board::spawnResources(unsigned int amount, unsigned int hp) {
-    std::vector<field*> fs;
+void rts::board::spawnResources(unsigned int amount, unsigned int hp) {
+    std::vector<field*> resFields = resourceFields(false);
     for (unsigned int i = 0; i < amount; ++i) {
-        fs.push_back(spawnResource(hp));
+        if (resFields.empty()) return;
+        std::uniform_int_distribution<> distrib(0, resFields.size() - 1);
+        int fid = distrib(gen);
+        field* f = resFields[fid];
+        f->spawnResource(hp);
+        resFields.erase(resFields.begin() + fid);
     }
-    return fs;
 }
 
 unsigned int rts::board::getXdim() const { return fields.size(); }
