@@ -9,9 +9,10 @@
 #include <msg/stringBuffer.hpp>
 
 rts::unit::unit(player* owner_, field* field_, unsigned int id_) :
-    owner(owner_),
-    f(field_), id(id_),
-    hp(owner_->getGame()->getUnitHp())
+    id(id_),
+    hp(owner_->getGame()->getUnitHp()),
+    f(field_),
+    owner(owner_)
 {
     printf("%s got new unit\n", owner->getName().c_str());
     assert(f->empty());
