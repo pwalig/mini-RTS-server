@@ -81,6 +81,7 @@ Some messages consist of only type character others contain more data.
 `<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `;`  
 ...  
 `<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `;` `\n` - new player has joined
+- `l` `<player name>` `\n` - player `<player name>` has either left or lost the game
 - `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - unit of id `<id>` has moved to `<x>;<y>`
 - `a` `<id1>` ` ` `<id2>` `\n` - unit of id `<id1>` attacked unit of id `<id2>`
 - `d` `<id>` `\n` - unit of id `<id>` mined a resource
@@ -118,18 +119,18 @@ Structure as follows:
 
 Numbers are represented as strings of characters (97 ---> "97" not 'a').
 
-### Communication order
+### Communication order (client`s perspective)
 
-1. server sends `c`  
-2. client sends `n`  
-3. if server responds `n` => go to step 2.  
-3. else server responds `y`  
-4. if client sends `n` => go to step 3.  
-4. else client sends `j`  
-5. if server responds `q` => wait until server sends `p`, then `r`  
-5. else server reponds `p`, then `r`  
-6. server can send multiple: `j` `m` `a` `d` `u` `f` messages  
-6. client can send multiple: `m` `a` `d` messages   
-6. if client sends `q` => go to step 4.  
-6. if server sends `W` or `L` => go to step 4.  
-7. server sends `t` => go to step 6.  
+**1:** server sends `c`  
+**2:** client sends `n`  
+**3:** if server responds `n` => go to step **2**  
+**3:** else server responds `y`  
+**4:** if client sends `n` => go to step **3**  
+**4:** else client sends `j`  
+**5:** if server responds `q` => wait until server sends `p`, then `r`  
+**5:** else server reponds `p`, then `r`  
+**6:** server can send multiple: `j` `l` `m` `a` `d` `u` `f` messages  
+**6:** client can send multiple: `m` `a` `d` messages   
+**6:** if client sends `q` => go to step **4**  
+**6:** if server sends `W` or `L` => go to step **4**  
+**7:** server sends `t` => go to step **6**  
