@@ -29,7 +29,7 @@ void rts::player::handleNewMessage(const message::base* msg) {
     }
     else if (const message::state* cmsg = dynamic_cast<const message::state*>(msg)) {
         if (cmsg->act == message::state::action::disconnect) {
-        _game->deletePlayer(this);
+            _game->deletePlayer(this);
         }
         else if (cmsg->act == message::state::action::joinRequest) {
             _game->tryJoin(this);

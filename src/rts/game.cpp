@@ -38,6 +38,8 @@ rts::game::game(const char *port, const char* configFile) : _server(port) {
     }
 }
 
+// ========== MESSAGES =========
+
 std::vector<char> rts::game::configMessage() const {
     std::vector<char> buff = {'c'};
     message::appendNumberWDelim(buff, millis, ' ');
@@ -87,7 +89,7 @@ std::vector<char> rts::game::boardStateMessage() const {
 }
 
 std::vector<char> rts::game::newPlayerMessage(const player* p) const{
-    std::vector<char> buff = {'p'};
+    std::vector<char> buff = {'j'};
     
     message::appendStringWDelim(buff, p->getName(), ' '); // player name
     message::appendNumberWDelim(buff, p->units.size(), ';'); // amount of units
@@ -103,6 +105,15 @@ std::vector<char> rts::game::newPlayerMessage(const player* p) const{
 
     return buff;
 }
+std::vector<char> rts::game::newResourceMessage(const field* f) const{
+    std::vector<char> buff = {'f'};
+    message::appendNumberWDelim(buff, f->x, ' ');
+    message::appendNumberWDelim(buff, f->y, ' ');
+    message::appendNumberWDelim(buff, f->getHp(), '\n');
+    return buff;
+}
+
+// ========== GAME LOGIC ==========
 
 void rts::game::handleNewClient(client* client_) {
     player* pl = new player(this, client_);
@@ -111,12 +122,12 @@ void rts::game::handleNewClient(client* client_) {
 }
 
 void rts::game::loopLogic(){
-    // spawn resource
-    if (rand() % 10 == 0) _board.spawnResource(resourceHp);
+    // spawn resource and inform players
+    if (rand() % 10 == 0) sendToPlayers(activePlayers, newResourceMessage(_board.spawnResource(resourceHp)));
 
 
     // sent updates to clients
-    sendToPlayers(activePlayers, boardStateMessage());
+    // sendToPlayers(activePlayers, boardStateMessage());
     
     // allow units to move again
     for (player* p : activePlayers) {
@@ -148,10 +159,11 @@ void rts::game::startGame() {
 
 void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
-    activePlayers.insert(pl);
     pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
-    pl->getClient()->sendToClient({'g', '\n'}); // joined active group
     sendToPlayers(activePlayers, newPlayerMessage(pl));
+    activePlayers.insert(pl);
+    pl->getClient()->sendToClient({'g', '\n'}); // joined active group
+    pl->getClient()->sendToClient(boardStateMessage());
 }
 
 void rts::game::addPlayerToQueue(player* pl) {
@@ -234,6 +246,8 @@ void rts::game::tryWin(player* pl){
         if (!queuedPlayers.empty()) startGame();
     }
 }
+
+// ========== GETTERS ==========
 
 unsigned int rts::game::getUnitDamage() const {return unitDamage;}
 unsigned int rts::game::getUnitHp() const {return unitHp;}

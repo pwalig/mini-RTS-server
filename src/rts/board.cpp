@@ -83,14 +83,16 @@ rts::field* rts::board::closestEmptyField(const field* source) {
     return candidate;
 }
 
-void rts::board::spawnResource(unsigned int hp) {
-    randomResourceField(false)->spawnResource(hp);
+rts::field* rts::board::spawnResource(unsigned int hp) {
+    return randomResourceField(false)->spawnResource(hp);
 }
 
-void rts::board::spawnResources(unsigned int amount, unsigned int hp) {
+std::vector<rts::field*> rts::board::spawnResources(unsigned int amount, unsigned int hp) {
+    std::vector<field*> fs;
     for (unsigned int i = 0; i < amount; ++i) {
-        spawnResource(hp);
+        fs.push_back(spawnResource(hp));
     }
+    return fs;
 }
 
 unsigned int rts::board::getXdim() const { return fields.size(); }
