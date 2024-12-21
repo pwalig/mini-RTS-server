@@ -76,8 +76,9 @@ Some messages consist of only type character others contain more data.
 
 ### From server
 
-- `g` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` `\n` - player was sent to game room (in response to: `j`), `<board x dim>`, `<board y dim>` and `<unitsToWin>` same as in `[config file]`
+- `g` `\n` - player was sent to game room (in response to: `j`), `<board x dim>`, `<board y dim>` and `<unitsToWin>` same as in `[config file]`
 - `c` `<millis>` ` ` `<maxPlayers>` ` ` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` ` ` `<startResources>` ` ` `<resourceHp>` ` ` `<unitHp>` ` ` `<unitDamage>` ` ` `<allowedNameCharacters>` `\n` - whole server configuration sent to newly joined clients
+- `t` `\n` - sent to all players in game room in regular time intervals, marks the and of each tick and a start of the next one
 - `q` `\n` - player was sent to queue (in response to: `j`)
 - `y` `\n` - client request accepted (in response to: `n`)
 - `n` `\n` - client request denied (in response to: `j` or `n`)

@@ -98,12 +98,7 @@ void rts::game::loopLogic(){
 
 
     // sent updates to clients
-    std::vector<char> msg = boardStateMessage();
-
-    for (player* p : activePlayers){
-        p->getClient()->sendToClient(msg);
-    }
-    
+    sendToPlayers(activePlayers, boardStateMessage());
     
     // allow units to move again
     for (player* p : activePlayers) {
@@ -111,6 +106,9 @@ void rts::game::loopLogic(){
             u->movedThisRound = false;
         }
     }
+
+    // send next tick message to room players
+    sendToPlayers(activePlayers, {'t', '\n'}); // next game tick
 }
 
 void rts::game::clearRoom() {
@@ -134,11 +132,7 @@ void rts::game::addPlayerToRoom(player* pl) {
     assert(activePlayers.size() < maxPlayers);
     activePlayers.insert(pl);
     pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
-    std::vector<char> buff = {'g'};
-    message::appendNumberWDelim(buff, _board.getXdim(), ' ');
-    message::appendNumberWDelim(buff, _board.getYdim(), ' ');
-    message::appendNumberWDelim(buff, unitsToWin, '\n');
-    pl->getClient()->sendToClient(buff); // joined active group
+    pl->getClient()->sendToClient({'g', '\n'}); // joined active group
 }
 
 void rts::game::addPlayerToQueue(player* pl) {
@@ -167,6 +161,12 @@ void rts::game::removePlayerFromRoomOrQueue(player* pl) {
         if (it != queuedPlayers.end()) {
             queuedPlayers.erase(it);
         }
+    }
+}
+
+void rts::game::sendToPlayers(const std::unordered_set<rts::player*>& players, const std::vector<char>& message) {
+    for (player* p : players){
+        p->getClient()->sendToClient(message);
     }
 }
 

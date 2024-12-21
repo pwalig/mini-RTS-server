@@ -42,6 +42,7 @@ namespace rts {
         void moveQueuedPlayerToRoom();
 
         static std::unordered_map<std::string, std::function<void(game*, std::ifstream&)>> configValueHandlers;
+        static void sendToPlayers(const std::unordered_set<player*>& players, const std::vector<char>& message);
 
     public:
         board _board;
