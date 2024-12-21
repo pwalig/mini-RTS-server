@@ -1,5 +1,8 @@
 # mini-RTS-server
+
 server for minimalistic RTS game
+
+**server is linux only** will build and run only on linux
 
 # Building with CMake
 
