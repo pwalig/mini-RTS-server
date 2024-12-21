@@ -86,6 +86,24 @@ std::vector<char> rts::game::boardStateMessage() const {
     return buff;
 }
 
+std::vector<char> rts::game::newPlayerMessage(const player* p) const{
+    std::vector<char> buff = {'p'};
+    
+    message::appendStringWDelim(buff, p->getName(), ' '); // player name
+    message::appendNumberWDelim(buff, p->units.size(), ';'); // amount of units
+    
+    for (unit* u : p->units) {
+        message::appendNumberWDelim(buff, u->id, ' ');
+        message::appendNumberWDelim(buff, u->f->x, ' ');
+        message::appendNumberWDelim(buff, u->f->y, ' ');
+        message::appendNumberWDelim(buff, u->hp, ';');
+    }
+
+    buff.push_back('\n');
+
+    return buff;
+}
+
 void rts::game::handleNewClient(client* client_) {
     player* pl = new player(this, client_);
     allPlayers.insert(pl);
@@ -133,6 +151,7 @@ void rts::game::addPlayerToRoom(player* pl) {
     activePlayers.insert(pl);
     pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
     pl->getClient()->sendToClient({'g', '\n'}); // joined active group
+    sendToPlayers(activePlayers, newPlayerMessage(pl));
 }
 
 void rts::game::addPlayerToQueue(player* pl) {

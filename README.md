@@ -68,8 +68,8 @@ Some messages consist of only type character others contain more data.
 ### From client
 
 - `n` `<name>` `\n` - set name or rename self
-- `j` `\n` - request join (player will be sent to game room or queue)
-- `q` `\n` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
+- `j` - request join (player will be sent to game room or queue)
+- `q` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
 - `m` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` designate destination)
 - `a` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` coordinates of the target unit) (possible to attack own units)
 - `d` `<x1>` ` ` `<y1>` `\n` - request unit to mine the resource (`<x1><y1>` are coordinates of the unit) (unit can only mine resource that it is standing on)
@@ -78,6 +78,14 @@ Some messages consist of only type character others contain more data.
 
 - `g` `\n` - player was sent to game room (in response to: `j`), `<board x dim>`, `<board y dim>` and `<unitsToWin>` same as in `[config file]`
 - `c` `<millis>` ` ` `<maxPlayers>` ` ` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` ` ` `<startResources>` ` ` `<resourceHp>` ` ` `<unitHp>` ` ` `<unitDamage>` ` ` `<allowedNameCharacters>` `\n` - whole server configuration sent to newly joined clients
+- `p` `<player name>` ` ` `<amount of units of player>` `;`  
+`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `;`  
+...  
+`<id>` ` ` `<x posion>` ` ` `<y position>` ` ` `<hp>` `;` `\n` - message explaining current state of the player, is sent to everyone when new player joins or to new player to inform about other players
+- `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - unit of id `<id>` has moved to `<x>;<y>`
+- `a` `<id1>` ` ` `<id2>` `\n` - unit of id `<id1>` attacked unit of id `<id2>`
+- `d` `<id>` `\n` - unit of id `<id>` mined a resource
+- `r` `<x>` ` ` `<y>` ` ` `<hp>` `\n` - there is a resource on field `<x>;<y>`, sent to everyone when resource spawns or to new player for every resource that is already on the board
 - `t` `\n` - sent to all players in game room in regular time intervals, marks the and of each tick and a start of the next one
 - `q` `\n` - player was sent to queue (in response to: `j`)
 - `y` `\n` - client request accepted (in response to: `n`)
