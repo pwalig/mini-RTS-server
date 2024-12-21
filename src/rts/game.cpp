@@ -105,6 +105,15 @@ std::vector<char> rts::game::newPlayerMessage(const player* p) const{
 
     return buff;
 }
+
+std::vector<char> rts::game::playerLeftMessage(const player* p) const{
+    std::vector<char> buff = {'l'};
+    
+    message::appendStringWDelim(buff, p->getName(), '\n'); // player name
+
+    return buff;
+}
+
 std::vector<char> rts::game::newResourceMessage(const field* f) const{
     std::vector<char> buff = {'f'};
     message::appendNumberWDelim(buff, f->x, ' ');
@@ -145,6 +154,7 @@ void rts::game::clearRoom() {
         pl->removeAllUnits();
     }
     activePlayers.clear();
+    nextUnitId = 0;
     _server.loopLogic = [](){};
 }
 
@@ -162,7 +172,6 @@ void rts::game::addPlayerToRoom(player* pl) {
     pl->newUnit(_board.randomEmptyField(true)); // add first unit for the player to control
     sendToPlayers(activePlayers, newPlayerMessage(pl));
     activePlayers.insert(pl);
-    pl->getClient()->sendToClient({'g', '\n'}); // joined active group
     pl->getClient()->sendToClient(boardStateMessage());
 }
 
@@ -182,6 +191,7 @@ void rts::game::removePlayerFromRoomOrQueue(player* pl) {
     if (activePlayers.find(pl) != activePlayers.end()) {
         activePlayers.erase(pl);
         pl->removeAllUnits();
+        sendToPlayers(activePlayers, playerLeftMessage(pl));
         if (!queuedPlayers.empty()) moveQueuedPlayerToRoom();
         if (activePlayers.empty()) clearRoom();
     }
@@ -199,6 +209,10 @@ void rts::game::sendToPlayers(const std::unordered_set<rts::player*>& players, c
     for (player* p : players){
         p->getClient()->sendToClient(message);
     }
+}
+
+void rts::game::sendToPlayers(const std::vector<char>& message) const {
+    sendToPlayers(activePlayers, message);
 }
 
 void rts::game::run() {

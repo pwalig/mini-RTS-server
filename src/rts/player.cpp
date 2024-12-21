@@ -7,6 +7,7 @@
 #include <rts/game.hpp>
 #include <rts/unit.hpp>
 #include <msg/state.hpp>
+#include <msg/stringBuffer.hpp>
 
 std::unordered_map<std::string, rts::player*> rts::player::playersByName;
 
@@ -96,7 +97,16 @@ void rts::player::removeAllUnits(){
 }
 
 void rts::player::newUnit(field* field_){
-    units.insert(new unit(this, field_, _game->getNextUnitId()));
+    unit* u = new unit(this, field_, _game->getNextUnitId());
+    units.insert(u);
+    
+    std::vector<char> buff = {'u'};
+    message::appendStringWDelim(buff, _name, ' ');
+    message::appendNumberWDelim(buff, u->id, ' ');
+    message::appendNumberWDelim(buff, u->f->x, ' ');
+    message::appendNumberWDelim(buff, u->f->y, '\n');
+    _game->sendToPlayers(buff);
+
     _game->tryWin(this);
 }
 
