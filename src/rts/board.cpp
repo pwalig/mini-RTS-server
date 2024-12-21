@@ -27,13 +27,7 @@ std::vector<rts::field*> rts::board::resourceFields(bool resource) {
     std::vector<field*> out;
     for (std::vector<field>& row : fields){
         for (field& f : row) {
-            if (f.hasResource() == resource) {
-                printf("begin\n");
-                printf("%d, %d ", (int)out.size(), (int)out.capacity());
-                out.push_back(&f);
-                printf("y\n");
-                printf("end\n");
-            }
+            if (f.hasResource() == resource) out.push_back(&f);
         }
     }
     return out;

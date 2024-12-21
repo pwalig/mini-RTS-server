@@ -73,12 +73,9 @@ std::vector<char> rts::game::boardStateMessage() const {
 
         buff.push_back(';');
     }
-    printf("BEGIN\n");
     buff.push_back('\n');
-    printf("END1\n");
     // resources
     buff.push_back('r');
-    printf("END2\n");
     std::vector<const rts::field*> resources = _board.constResourceFields(true);
     message::appendNumberWDelim(buff, resources.size(), ';'); // amount of resources
     for (const field* f : resources) {
@@ -148,10 +145,12 @@ void rts::game::clearRoom() {
     activePlayers.clear();
     nextUnitId = 0;
     _server.loopLogic = [](){};
+    printf("room cleared\n");
 }
 
 void rts::game::startGame() {
     _board = board(boardX, boardY); // reset board
+    printf("game start\n");
     _board.spawnResources(startResources, resourceHp);
     while(!queuedPlayers.empty() && activePlayers.size() < maxPlayers){
         moveQueuedPlayerToRoom();
