@@ -12,22 +12,25 @@ namespace rts {
     class game {
     private:
         server _server;
-        unsigned int maxPlayers = 16;
         std::unordered_set<player*> allPlayers;
         std::unordered_set<player*> activePlayers;
         std::deque<player*> queuedPlayers;
 
         unsigned int millis = 1000;
-        unsigned int startResources = 25;
+        unsigned int maxPlayers = 16;
         unsigned int boardX = 256;
         unsigned int boardY = 256;
+        unsigned int unitsToWin = 50;
+        unsigned int startResources = 25;
         unsigned int resourceHp = 100;
         unsigned int unitHp = 100;
         unsigned int unitDamage = 10;
-        unsigned int unitsToWin = 50;
         std::string allowedNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
 
         unsigned int nextUnitId = 0;
+
+        std::vector<char> configMessage() const;
+        std::vector<char> boardStateMessage() const;
 
         void handleNewClient(client* client_);
         void loopLogic();

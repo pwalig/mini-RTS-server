@@ -13,13 +13,13 @@ std::unordered_map<std::string, std::function<void(rts::game*, std::ifstream&)>>
     {"maxPlayers", [](rts::game* g, std::ifstream& f){ f >> g->maxPlayers; }},
     {"boardX", [](rts::game* g, std::ifstream& f){ f >> g->boardX; }},
     {"boardY", [](rts::game* g, std::ifstream& f){ f >> g->boardY; }},
+    {"unitsToWin", [](rts::game* g, std::ifstream& f){ f >> g->unitsToWin; }},
     {"startResources", [](rts::game* g, std::ifstream& f){ f >> g->startResources; }},
     {"resourceHp", [](rts::game* g, std::ifstream& f){ f >> g->resourceHp; }},
     {"unitHp", [](rts::game* g, std::ifstream& f){ f >> g->unitHp; }},
     {"unitDamage", [](rts::game* g, std::ifstream& f){ f >> g->unitDamage; }},
-    {"unitsToWin", [](rts::game* g, std::ifstream& f){ f >> g->unitsToWin; }},
     {"allowedNameCharacters", [](rts::game* g, std::ifstream& f){ f >> g->allowedNameCharacters; }}
-}; // i can only dream of reflection system in c++
+}; // i wish there was reflection system in c++
 
 rts::game::game(const char *port, const char* configFile) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
@@ -38,17 +38,22 @@ rts::game::game(const char *port, const char* configFile) : _server(port) {
     }
 }
 
-void rts::game::handleNewClient(client* client_) {
-    player* pl = new player(this, client_);
-    allPlayers.insert(pl);
+std::vector<char> rts::game::configMessage() const {
+    std::vector<char> buff = {'c'};
+    message::appendNumberWDelim(buff, millis, ' ');
+    message::appendNumberWDelim(buff, maxPlayers, ' ');
+    message::appendNumberWDelim(buff, boardX, ' ');
+    message::appendNumberWDelim(buff, boardY, ' ');
+    message::appendNumberWDelim(buff, unitsToWin, ' ');
+    message::appendNumberWDelim(buff, startResources, ' ');
+    message::appendNumberWDelim(buff, resourceHp, ' ');
+    message::appendNumberWDelim(buff, unitHp, ' ');
+    message::appendNumberWDelim(buff, unitDamage, ' ');
+    message::appendStringWDelim(buff, allowedNameCharacters, '\n');
+    return buff;
 }
 
-void rts::game::loopLogic(){
-    // spawn resource
-    if (rand() % 10 == 0) _board.spawnResource(resourceHp);
-
-
-    // sent updates to clients
+std::vector<char> rts::game::boardStateMessage() const {
     std::vector<char> buff = {'p'};
     message::appendNumberWDelim(buff, activePlayers.size(), ';'); // amount of players
 
@@ -70,17 +75,33 @@ void rts::game::loopLogic(){
 
     // resources
     buff.push_back('r');
-    std::vector<rts::field*> resources = _board.resourceFields(true);
+    std::vector<const rts::field*> resources = _board.constResourceFields(true);
     message::appendNumberWDelim(buff, resources.size(), ';'); // amount of resources
-    for (field* f : resources) {
+    for (const field* f : resources) {
         message::appendNumberWDelim(buff, f->x, ' ');
         message::appendNumberWDelim(buff, f->y, ' ');
         message::appendNumberWDelim(buff, f->getHp(), ';');
     }
     buff.push_back('\n');
+    return buff;
+}
+
+void rts::game::handleNewClient(client* client_) {
+    player* pl = new player(this, client_);
+    allPlayers.insert(pl);
+    pl->getClient()->sendToClient(configMessage());
+}
+
+void rts::game::loopLogic(){
+    // spawn resource
+    if (rand() % 10 == 0) _board.spawnResource(resourceHp);
+
+
+    // sent updates to clients
+    std::vector<char> msg = boardStateMessage();
 
     for (player* p : activePlayers){
-        p->getClient()->sendToClient(buff);
+        p->getClient()->sendToClient(msg);
     }
     
     

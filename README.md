@@ -31,12 +31,12 @@ make
 
 ### Available values:
 
-* `maxPlayers` - how many players can play at once [default: 16]
 * `millis` - duration of one game step [default: 200]
+* `maxPlayers` - how many players can play at once [default: 16]
 * `boardX` - x dimention of the board [default: 256]
 * `boardY` - y dimention of the board[default: 256]
-* `startResources` - how many resources to spawn at the start of the game [default: 25]
 * `unitsToWin` - how many units player has to aquire to win the game [default: 50]
+* `startResources` - how many resources to spawn at the start of the game [default: 25]
 * `resourceHp` - starting hit points of every new resource [default: 100]
 * `unitHp` - starting hit points of every new unit [default: 100]
 * `unitDamage` - how much damage do units deal on every attack [default: 10]
@@ -77,6 +77,7 @@ Some messages consist of only type character others contain more data.
 ### From server
 
 - `g` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` `\n` - player was sent to game room (in response to: `j`), `<board x dim>`, `<board y dim>` and `<unitsToWin>` same as in `[config file]`
+- `c` `<millis>` ` ` `<maxPlayers>` ` ` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` ` ` `<startResources>` ` ` `<resourceHp>` ` ` `<unitHp>` ` ` `<unitDamage>` ` ` `<allowedNameCharacters>` `\n` - whole server configuration sent to newly joined clients
 - `q` `\n` - player was sent to queue (in response to: `j`)
 - `y` `\n` - client request accepted (in response to: `n`)
 - `n` `\n` - client request denied (in response to: `j` or `n`)

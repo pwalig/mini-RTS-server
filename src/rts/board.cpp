@@ -12,12 +12,12 @@ rts::board::board(unsigned int X, unsigned int Y) : gen(std::random_device()()) 
     }
 }
 
-rts::field* rts::board::getField(const unsigned int& xpos, const unsigned int& ypos) {
+rts::field* rts::board::getField(unsigned int xpos, unsigned int ypos) {
     if (xpos < getXdim() && ypos < getYdim())
         return &fields[xpos][ypos];
     else return nullptr;
 }
-const rts::field* rts::board::getConstField(const unsigned int& xpos, const unsigned int& ypos) const {
+const rts::field* rts::board::getConstField(unsigned int xpos, unsigned int ypos) const {
     if (xpos < getXdim() && ypos < getYdim())
         return &fields[xpos][ypos];
     else return nullptr;
@@ -27,6 +27,16 @@ std::vector<rts::field*> rts::board::resourceFields(bool resource) {
     std::vector<field*> out;
     for (std::vector<field>& row : fields){
         for (field& f : row) {
+            if (f.hasResource() == resource) out.push_back(&f);
+        }
+    }
+    return out;
+}
+
+std::vector<const rts::field*> rts::board::constResourceFields(bool resource) const {
+    std::vector<const field*> out;
+    for (const std::vector<field>& row : fields){
+        for (const field& f : row) {
             if (f.hasResource() == resource) out.push_back(&f);
         }
     }
