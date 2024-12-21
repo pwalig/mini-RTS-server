@@ -25,6 +25,7 @@ namespace rts {
         unsigned int unitHp = 100;
         unsigned int unitDamage = 10;
         unsigned int unitsToWin = 50;
+        std::string allowedNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
 
         unsigned int nextUnitId = 0;
 
@@ -37,7 +38,7 @@ namespace rts {
         void addPlayerToQueue(player* pl);
         void moveQueuedPlayerToRoom();
 
-        unsigned int& property(const std::string& name);
+        static std::unordered_map<std::string, std::function<void(game*, std::ifstream&)>> configValueHandlers;
 
     public:
         board _board;

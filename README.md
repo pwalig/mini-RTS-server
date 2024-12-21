@@ -34,9 +34,10 @@ make
 * `boardY` - y dimention of the board[default: 256]
 * `startResources` - how many resources to spawn at the start of the game [default: 25]
 * `unitsToWin` - how many units player has to aquire to win the game [default: 50]
-* `resourceHp` - starting hit points of every new resource
-* `unitHp` - starting hit points of every new unit
-* `unitDamage` - how much damage do units deal on every attack
+* `resourceHp` - starting hit points of every new resource [default: 100]
+* `unitHp` - starting hit points of every new unit [default: 100]
+* `unitDamage` - how much damage do units deal on every attack [default: 10]
+* `allowedNameCharacters` - string of characters that can be used in player names  [default: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_]
 
 ### Example:
 

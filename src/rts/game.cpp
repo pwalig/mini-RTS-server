@@ -8,34 +8,34 @@
 #include <msg/stringBuffer.hpp>
 #include <fstream>
 
+std::unordered_map<std::string, std::function<void(rts::game*, std::ifstream&)>> rts::game::configValueHandlers = {
+    {"millis", [](rts::game* g, std::ifstream& f){ f >> g->millis; }},
+    {"maxPlayers", [](rts::game* g, std::ifstream& f){ f >> g->maxPlayers; }},
+    {"boardX", [](rts::game* g, std::ifstream& f){ f >> g->boardX; }},
+    {"boardY", [](rts::game* g, std::ifstream& f){ f >> g->boardY; }},
+    {"startResources", [](rts::game* g, std::ifstream& f){ f >> g->startResources; }},
+    {"resourceHp", [](rts::game* g, std::ifstream& f){ f >> g->resourceHp; }},
+    {"unitHp", [](rts::game* g, std::ifstream& f){ f >> g->unitHp; }},
+    {"unitDamage", [](rts::game* g, std::ifstream& f){ f >> g->unitDamage; }},
+    {"unitsToWin", [](rts::game* g, std::ifstream& f){ f >> g->unitsToWin; }},
+    {"allowedNameCharacters", [](rts::game* g, std::ifstream& f){ f >> g->allowedNameCharacters; }}
+}; // i can only dream of reflection system in c++
+
 rts::game::game(const char *port, const char* configFile) : _server(port) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
 
     if (configFile != nullptr) {
         std::ifstream fin(configFile);
         std::string name;
-        unsigned int val;
         if (fin.is_open()) {
             while (!fin.eof()) {
                 fin >> name;
-                fin >> val;
-                property(name) = val;
+                if (configValueHandlers.find(name) != configValueHandlers.end())
+                    configValueHandlers[name](this, fin);
+                else throw std::logic_error("invalid property name");
             }
         }
     }
-}
-
-unsigned int& rts::game::property(const std::string& name) {
-    if (name == "maxPlayers") return maxPlayers;
-    if (name == "startResources") return startResources;
-    if (name == "millis") return millis;
-    if (name == "boardX") return boardX;
-    if (name == "boardY") return boardY;
-    if (name == "resourceHp") return resourceHp;
-    if (name == "unitHp") return unitHp;
-    if (name == "unitDamage") return unitDamage;
-    if (name == "unitsToWin") return unitsToWin;
-    throw std::logic_error("invalid property name");
 }
 
 void rts::game::handleNewClient(client* client_) {
@@ -204,8 +204,7 @@ unsigned int rts::game::getNextUnitId() {
 
 bool rts::game::nameValid(const std::string& name) const {
     for (char c : name){
-        if (c < 'A') return false;
-        if (c > 'z') return false;
+        if (allowedNameCharacters.find(c) == std::string::npos) return false;
     }
     return true;
 }
