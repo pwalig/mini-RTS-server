@@ -16,13 +16,15 @@ bool rts::field::hasResource() const {
     return (resourceHp > 0);
 }
 
-void rts::field::spawnResource(unsigned int hp) {
+rts::field* rts::field::spawnResource(unsigned int hp) {
     assert(!hasResource());
     resourceHp = (int)hp;
+    return this;
 }
 
-void rts::field::mine(int dmg) {
+rts::field* rts::field::mine(int dmg) {
     resourceHp -= dmg;
+    return this;
 }
 
 int rts::field::getHp() const {
