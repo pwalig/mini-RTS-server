@@ -6,11 +6,13 @@
 #include <rts/field.hpp>
 #include <rts/player.hpp>
 #include <rts/game.hpp>
+#include <msg/stringBuffer.hpp>
 
 rts::unit::unit(player* owner_, field* field_, unsigned int id_) :
-    owner(owner_),
-    f(field_), id(id_),
-    hp(owner_->getGame()->getUnitHp())
+    id(id_),
+    hp(owner_->getGame()->getUnitHp()),
+    f(field_),
+    owner(owner_)
 {
     printf("%s got new unit\n", owner->getName().c_str());
     assert(f->empty());
@@ -19,6 +21,11 @@ rts::unit::unit(player* owner_, field* field_, unsigned int id_) :
 
 void rts::unit::mine(){
     if (!movedThisRound && f->hasResource()) {
+
+        std::vector<char> buff = {'d'};
+        message::appendNumberWDelim(buff, id, '\n');
+        owner->getGame()->sendToPlayers(buff);
+
         f->mine(owner->getGame()->getUnitDamage());
         if (f->getHp() <= 0) {
             field* nf = owner->getGame()->_board.closestEmptyField(f);
@@ -29,6 +36,14 @@ void rts::unit::mine(){
 }
 void rts::unit::move(field* field_){
     if (!movedThisRound && f->distance(*field_) <= 1 && field_->empty()) {
+        
+        std::vector<char> buff = {'m'};
+        message::appendNumberWDelim(buff, id, ' ');
+        message::appendNumberWDelim(buff, field_->x, ' ');
+        message::appendNumberWDelim(buff, field_->y, '\n');
+        owner->getGame()->sendToPlayers(buff);
+
+
         this->f->_unit = nullptr;
         this->f = field_;
         field_->_unit = this;
@@ -38,6 +53,12 @@ void rts::unit::move(field* field_){
 void rts::unit::attack(unit* target){
     if (target == nullptr) return;
     if (!movedThisRound && f->distance(*(target->f)) <= 1) {
+
+        std::vector<char> buff = {'a'};
+        message::appendNumberWDelim(buff, id, ' ');
+        message::appendNumberWDelim(buff, target->id, '\n');
+        owner->getGame()->sendToPlayers(buff);
+
         target->recvDamage(owner->getGame()->getUnitDamage());
         movedThisRound = true;
     }

@@ -11,8 +11,12 @@ namespace rts {
 
         bool empty() const;
         bool hasResource() const;
-        void spawnResource(unsigned int hp);
-        void mine(int dmg);
+
+        // @returns this field
+        rts::field* spawnResource(unsigned int hp);
+
+        // @returns this field
+        rts::field* mine(int dmg);
 
         int getHp() const;
 

@@ -68,16 +68,22 @@ Some messages consist of only type character others contain more data.
 ### From client
 
 - `n` `<name>` `\n` - set name or rename self
-- `j` `\n` - request join (player will be sent to game room or queue)
-- `q` `\n` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
+- `j` - request join (player will be sent to game room or queue)
+- `q` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
 - `m` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` designate destination)
 - `a` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` coordinates of the target unit) (possible to attack own units)
 - `d` `<x1>` ` ` `<y1>` `\n` - request unit to mine the resource (`<x1><y1>` are coordinates of the unit) (unit can only mine resource that it is standing on)
 
 ### From server
 
-- `g` `\n` - player was sent to game room (in response to: `j`), `<board x dim>`, `<board y dim>` and `<unitsToWin>` same as in `[config file]`
 - `c` `<millis>` ` ` `<maxPlayers>` ` ` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` ` ` `<startResources>` ` ` `<resourceHp>` ` ` `<unitHp>` ` ` `<unitDamage>` ` ` `<allowedNameCharacters>` `\n` - whole server configuration sent to newly joined clients
+- `j` `<player name>` `\n` - new player has joined the game room
+- `l` `<player name>` `\n` - player `<player name>` has either left or lost the game
+- `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - unit of id `<id>` has moved to `<x>;<y>`
+- `a` `<id1>` ` ` `<id2>` `\n` - unit of id `<id1>` attacked unit of id `<id2>`
+- `d` `<id>` `\n` - unit of id `<id>` mined a resource
+- `u` `<player name>` ` ` `<id>` ` ` `<x>` ` ` `<y>` - player `<player name>` has aquired unit of id `<id>` on field `<x>;<y>`
+- `f` `<x>` ` ` `<y>` ` ` `<hp>` `\n` - new resource spawned on field `<x>;<y>`
 - `t` `\n` - sent to all players in game room in regular time intervals, marks the and of each tick and a start of the next one
 - `q` `\n` - player was sent to queue (in response to: `j`)
 - `y` `\n` - client request accepted (in response to: `n`)
@@ -85,9 +91,9 @@ Some messages consist of only type character others contain more data.
 - `L` `\n` - client lost the game (and was moved out of game room)
 - `W` `\n` - client won the game (and was moved out of game room)
  
-### Board state update
+### Board state message
 
-Board state update is sent to all players in the game room in regular time intervals
+Board state update is sent to every player that joins the game room
 
 Structure as follows:
 
@@ -109,3 +115,19 @@ Structure as follows:
 ...
 
 Numbers are represented as strings of characters (97 ---> "97" not 'a').
+
+### Communication order (client`s perspective)
+
+**1:** server sends `c`  
+**2:** client sends `n`  
+**3:** if server responds `n` => go to step **2**  
+**3:** else server responds `y`  
+**4:** if client sends `n` => go to step **3**  
+**4:** else client sends `j`  
+**5:** if server responds `q` => wait until server sends `p`, then `r`  
+**5:** else server reponds `p`, then `r`  
+**6:** server can send multiple: `j` `l` `m` `a` `d` `u` `f` messages  
+**6:** client can send multiple: `m` `a` `d` messages   
+**6:** if client sends `q` => go to step **4**  
+**6:** if server sends `W` or `L` => go to step **4**  
+**7:** server sends `t` => go to step **6**  

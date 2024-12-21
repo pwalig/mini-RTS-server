@@ -31,6 +31,9 @@ namespace rts {
 
         std::vector<char> configMessage() const;
         std::vector<char> boardStateMessage() const;
+        std::vector<char> newPlayerMessage(const player* p) const;
+        std::vector<char> playerLeftMessage(const player* p) const;
+        std::vector<char> newResourceMessage(const field* f) const;
 
         void handleNewClient(client* client_);
         void loopLogic();
@@ -48,6 +51,8 @@ namespace rts {
         board _board;
         
         game(const char *port, const char* configFile);
+        
+        void sendToPlayers(const std::vector<char>& message) const;
 
         void run();
 

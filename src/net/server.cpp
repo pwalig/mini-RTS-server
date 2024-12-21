@@ -81,8 +81,7 @@ void server::loop(const int& millis){
             else {
                 client* client_ = (client*)(ee.data.ptr);
                 if (ee.events & EPOLLIN) {
-                    std::vector<char> data = client_->receive();
-                    write(0, data.data(), data.size());
+                    client_->receive();
                 }
                 if (ee.events & EPOLLOUT) {
                     client_->sendFromBuffer();

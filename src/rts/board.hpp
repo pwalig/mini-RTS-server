@@ -25,7 +25,7 @@ namespace rts {
         field* randomResourceField(bool resource);
         field* closestEmptyField(const field* source);
 
-        void spawnResource(unsigned int hp);
+        field* spawnResource(unsigned int hp);
         void spawnResources(unsigned int amount, unsigned int hp);
 
         unsigned int getXdim() const;
