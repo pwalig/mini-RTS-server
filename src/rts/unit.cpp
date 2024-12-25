@@ -25,7 +25,7 @@ void rts::unit::mine(){
 
         std::vector<char> buff = {'d'};
         message::appendNumberWDelim(buff, id, ' ');
-        message::appendNumberWDelim(buff, std::max(f->getHp(), 0), '\n');
+        message::appendNumberWDelim(buff, f->getHp(), '\n');
         owner->getGame()->sendToPlayers(buff);
 
         if (f->getHp() <= 0) {
