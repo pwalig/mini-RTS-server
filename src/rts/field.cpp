@@ -24,8 +24,9 @@ rts::field* rts::field::spawnResource(unsigned int hp) {
     return this;
 }
 
-rts::field* rts::field::mine(int dmg) {
-    resourceHp -= dmg;
+rts::field* rts::field::mine(unsigned int dmg) {
+    if (dmg >= resourceHp) resourceHp = 0;
+    else resourceHp -= dmg;
     return this;
 }
 

@@ -4,7 +4,7 @@ namespace rts {
     class unit;
 
     class field {
-        int resourceHp = 0;
+        unsigned int resourceHp = 0;
 
     public:
         field(const unsigned int& xpos, const unsigned int& ypos);
@@ -16,7 +16,7 @@ namespace rts {
         rts::field* spawnResource(unsigned int hp);
 
         // @returns this field
-        rts::field* mine(int dmg);
+        rts::field* mine(unsigned int dmg);
 
         int getHp() const;
 

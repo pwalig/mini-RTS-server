@@ -65,7 +65,8 @@ void rts::unit::attack(unit* target){
 }
 
 void rts::unit::recvDamage(unsigned int dmg){
-    hp -= dmg;
+    if (dmg >= hp) hp = 0;
+    else hp -= dmg;
     if (hp <= 0) {
         owner->units.erase(this);
         if (owner->units.empty()) {
