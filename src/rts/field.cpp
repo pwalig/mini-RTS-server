@@ -30,7 +30,7 @@ rts::field* rts::field::mine(unsigned int dmg) {
     return this;
 }
 
-int rts::field::getHp() const {
+unsigned int rts::field::getHp() const {
     return resourceHp;
 }
 

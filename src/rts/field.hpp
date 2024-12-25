@@ -18,7 +18,7 @@ namespace rts {
         // @returns this field
         rts::field* mine(unsigned int dmg);
 
-        int getHp() const;
+        unsigned int getHp() const;
 
         unsigned int distance(const field& other) const;
         
