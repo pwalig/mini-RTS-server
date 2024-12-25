@@ -237,9 +237,12 @@ void rts::game::playerLostAllUnits(player* pl) {
 
 void rts::game::tryWin(player* pl){
     if (pl->units.size() >= unitsToWin) {
-        pl->getClient()->sendToClient({'W','\n'});
+        std::vector<char> buff = {'W'};
+        message::appendStringWDelim(buff, pl->getName(), '\n');
+        pl->getClient()->sendToClient(buff);
+        buff[0] = 'L';
         for (player* p : activePlayers){
-            if (p != pl) p->getClient()->sendToClient({'L','\n'});
+            if (p != pl) p->getClient()->sendToClient(buff);
         }
 
         clearRoom();
