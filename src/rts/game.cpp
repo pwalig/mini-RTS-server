@@ -231,7 +231,9 @@ void rts::game::deletePlayer(player* pl){
 void rts::game::playerLostAllUnits(player* pl) {
     assert(pl);
     assert(activePlayers.find(pl) != activePlayers.end());
-    pl->getClient()->sendToClient({'L','\n'});
+    std::vector<char> buff = {'l'};
+    message::appendStringWDelim(buff, pl->getName(), '\n');
+    pl->getClient()->sendToClient(buff);
     removePlayerFromRoomOrQueue(pl);
 }
 
