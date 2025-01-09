@@ -55,10 +55,14 @@ int server::fd() const {return _fd;}
 int server::epollFd() const {return _epollFd;}
 
 client* server::newClient() {
-    client* client_ = new client(this);
-    clients.insert(client_);
-    onNewClient(client_);
-    return client_;
+    try {
+        client* client_ = new client(this);
+        clients.insert(client_);
+        onNewClient(client_);
+        return client_;
+    } catch (client::connectException& cce){
+        return nullptr;
+    }
 }
 
 void server::deleteClient(client* client_){
