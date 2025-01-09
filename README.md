@@ -71,7 +71,7 @@ Some messages consist of only type character others contain more data.
 - `j` - request join (player will be sent to game room or queue)
 - `q` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
 - `m` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` designate destination)
-- `a` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` coordinates of the target unit) (possible to attack own units)
+- `a` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to attack another unit (`<x1><y1>` are coordinates of the unit, `<x2><y2>` coordinates of the target unit) (possible to attack own units)
 - `d` `<x1>` ` ` `<y1>` `\n` - request unit to mine the resource (`<x1><y1>` are coordinates of the unit) (unit can only mine resource that it is standing on)
 
 ### From server
@@ -116,7 +116,7 @@ Structure as follows:
 
 Numbers are represented as strings of characters (97 ---> "97" not 'a').
 
-### Communication order (client`s perspective)
+### Communication order (client's perspective)
 
 **1:** server sends `c`  
 **2:** client sends `n`  

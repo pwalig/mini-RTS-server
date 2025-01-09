@@ -6,12 +6,22 @@
 
 const unsigned long client::bufsiz = 256;
 
-client::client(server* server_) : owner(server_), clientAddr(), clientAddrSize(sizeof(clientAddr)) {
+client::client(server* server_) : owner(server_) {
+
+    sockaddr_storage clientAddr;
+    socklen_t clientAddrSize(sizeof(clientAddr));
 
     // accept new connection
     _fd = accept(server_->fd(), (sockaddr *)&clientAddr, &clientAddrSize);
-    if (_fd == -1)
+    if (_fd == -1) {
         perror("accept failed");
+        throw connectException("accept failed");
+    }
+    
+    char host_[NI_MAXHOST], port_[NI_MAXSERV];
+    getnameinfo((sockaddr *)&clientAddr, clientAddrSize, host_, NI_MAXHOST, port_, NI_MAXSERV, 0);
+    _hostname = std::string(host_);
+    _port = stoi(std::string(port_));
 
     // tell who has connected
     printf("new connection from: ");
@@ -25,28 +35,16 @@ client::client(server* server_) : owner(server_), clientAddr(), clientAddrSize(s
 
 int client::fd() const {return _fd;}
 
-std::string client::host() const {
-    std::string host;
-    name(&host, nullptr);
-    return host;
+std::string client::hostname() const {
+    return _hostname;
 }
 
 unsigned int client::port() const {
-    unsigned int port;
-    name(nullptr, &port);
-    return port;
-}
-
-void client::name(std::string* host, unsigned int* port) const {
-    char host_[NI_MAXHOST], port_[NI_MAXSERV];
-    getnameinfo((sockaddr *)&clientAddr, clientAddrSize, host_, NI_MAXHOST, port_, NI_MAXSERV, 0);
-    if (host) *host = std::string(host_);
-    if (port) *port = stoi(std::string(port_));
+    return _port;
 }
 
 void client::printName() const {
-    std::string host_ = host();
-    printf("%s:%d (fd: %d)", host_.c_str(), port(), _fd);
+    printf("%s:%d (fd: %d)", _hostname.c_str(), _port, _fd);
 }
 
 epoll_event client::inEvent() {
@@ -115,3 +113,6 @@ client::~client() {
     printName();
     printf("\n");
 }
+
+client::connectException::connectException(const char* _Message) : runtime_error(_Message) {}
+client::connectException::connectException(const std::string& _Message) : runtime_error(_Message) {}

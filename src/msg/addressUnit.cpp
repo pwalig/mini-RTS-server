@@ -7,7 +7,7 @@ message::addressUnitByCoordinates::addressUnitByCoordinates(
     ) : addressUnit(), x(xpos), y(ypos) {}
 
 rts::unit* message::addressUnitByCoordinates::getUnit(const rts::game* g) const{
-    const rts::field* f = g->_board.getConstField(x, y);
+    const rts::field* f = g->_board.getField(x, y);
     if (!f) return nullptr;
     return f->_unit;
 }

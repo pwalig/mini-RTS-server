@@ -17,7 +17,7 @@ rts::field* rts::board::getField(unsigned int xpos, unsigned int ypos) {
         return &fields[xpos][ypos];
     else return nullptr;
 }
-const rts::field* rts::board::getConstField(unsigned int xpos, unsigned int ypos) const {
+const rts::field* rts::board::getField(unsigned int xpos, unsigned int ypos) const {
     if (xpos < getXdim() && ypos < getYdim())
         return &fields[xpos][ypos];
     else return nullptr;
@@ -84,7 +84,9 @@ rts::field* rts::board::closestEmptyField(const field* source) {
 }
 
 rts::field* rts::board::spawnResource(unsigned int hp) {
-    return randomResourceField(false)->spawnResource(hp);
+    field* f = randomResourceField(false);
+    if (f) f->spawnResource(hp);
+    return f;
 }
 
 void rts::board::spawnResources(unsigned int amount, unsigned int hp) {

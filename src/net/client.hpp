@@ -5,15 +5,16 @@
 #include <vector>
 #include <functional>
 #include <string>
+#include <stdexcept>
 
 class server;
 
 class client {
 private:
     int _fd;
+    unsigned int _port;
     server* owner; // server to which this client is connected to
-    sockaddr_storage clientAddr;
-    socklen_t clientAddrSize;
+    std::string _hostname;
 
     static const unsigned long bufsiz;
     std::vector<char> buffer;
@@ -42,13 +43,18 @@ private:
 
 public:
 
+    class connectException : public std::runtime_error {
+    public:
+        connectException(const char* _Message);
+        connectException(const std::string& _Message);
+    };
+
     std::function<void(const std::vector<char>&)> onReceive = [](const std::vector<char>&){};
     std::function<void()> onDisconnect = [](){};
 
     int fd() const;
-    std::string host() const;
+    std::string hostname() const;
     unsigned int port() const;
-    void name(std::string* host, unsigned int* port) const;
     void printName() const;
 
     // @brief copies data to buffer and sets servers' epoll to wait for EPOLLOUT event.

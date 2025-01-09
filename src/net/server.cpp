@@ -55,10 +55,14 @@ int server::fd() const {return _fd;}
 int server::epollFd() const {return _epollFd;}
 
 client* server::newClient() {
-    client* client_ = new client(this);
-    clients.insert(client_);
-    onNewClient(client_);
-    return client_;
+    try {
+        client* client_ = new client(this);
+        clients.insert(client_);
+        onNewClient(client_);
+        return client_;
+    } catch (client::connectException& cce){
+        return nullptr;
+    }
 }
 
 void server::deleteClient(client* client_){
@@ -69,34 +73,31 @@ void server::deleteClient(client* client_){
 
 void server::loop(const int& millis){
     epoll_event ee;
-    int remaining = millis;
+    auto end = std::chrono::steady_clock::now() + std::chrono::milliseconds(millis);
     while (true)
     {
-        auto begin = std::chrono::steady_clock::now();
-        int ready = epoll_wait(_epollFd, &ee, 1, remaining);
+        int ready = epoll_wait(_epollFd, &ee, 1, 
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+            end - std::chrono::steady_clock::now()).count());
+
         if (ready == 1) {
             if (ee.data.ptr == nullptr){
                 newClient();
             }
             else {
                 client* client_ = (client*)(ee.data.ptr);
-                if (ee.events & EPOLLIN) {
-                    client_->receive();
-                }
                 if (ee.events & EPOLLOUT) {
                     client_->sendFromBuffer();
                 }
+                if (ee.events & EPOLLIN) {
+                    client_->receive();
+                }
             }
         }
-        auto end = std::chrono::steady_clock::now();
-        remaining -= std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 
-        if (remaining <= 0) {
-            auto begin = std::chrono::steady_clock::now();
+        if (end <= std::chrono::steady_clock::now()) {
             loopLogic();
-            remaining = millis;
-            auto end = std::chrono::steady_clock::now();
-            remaining -= std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            end += std::chrono::milliseconds(millis);
         }
     }
     
