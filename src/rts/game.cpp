@@ -121,7 +121,12 @@ void rts::game::handleNewClient(client* client_) {
 
 void rts::game::loopLogic(){
     // spawn resource and inform players
-    if (rand() % 10 == 0) sendToPlayers(activePlayers, newResourceMessage(_board.spawnResource(resourceHp)));
+    if (rand() % 10 == 0) {
+        field* f = _board.spawnResource(resourceHp);
+        if (f) {
+            sendToPlayers(activePlayers, newResourceMessage(f));
+        }
+    }
     
     // allow units to move again
     for (player* p : activePlayers) {

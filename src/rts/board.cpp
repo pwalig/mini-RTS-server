@@ -84,7 +84,9 @@ rts::field* rts::board::closestEmptyField(const field* source) {
 }
 
 rts::field* rts::board::spawnResource(unsigned int hp) {
-    return randomResourceField(false)->spawnResource(hp);
+    field* f = randomResourceField(false);
+    if (f) f->spawnResource(hp);
+    return f;
 }
 
 void rts::board::spawnResources(unsigned int amount, unsigned int hp) {
