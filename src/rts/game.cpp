@@ -263,6 +263,7 @@ unsigned int rts::game::getNextUnitId() {
 }
 
 bool rts::game::nameValid(const std::string& name) const {
+    if (name.empty()) return false;
     for (char c : name){
         if (allowedNameCharacters.find(c) == std::string::npos) return false;
     }

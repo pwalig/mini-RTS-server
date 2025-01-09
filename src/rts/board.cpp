@@ -17,7 +17,7 @@ rts::field* rts::board::getField(unsigned int xpos, unsigned int ypos) {
         return &fields[xpos][ypos];
     else return nullptr;
 }
-const rts::field* rts::board::getConstField(unsigned int xpos, unsigned int ypos) const {
+const rts::field* rts::board::getField(unsigned int xpos, unsigned int ypos) const {
     if (xpos < getXdim() && ypos < getYdim())
         return &fields[xpos][ypos];
     else return nullptr;
