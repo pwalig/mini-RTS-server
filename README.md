@@ -74,13 +74,13 @@ Some messages consist of only type character others contain more data.
 - `n` `<name>` `\n` - set name or rename self
 - `j` - request join (player will be sent to game room or queue)
 - `q` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
-- `m` `<id>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit of id `<id>` to move to field of coordinates: `<x2><y2>`
-- `a` `<id1>` ` ` `<id1>` `\n` - request unit to attack another unit (`<id1>` is id of the controlled unit, `<id2>` id id of the target unit) (possible to attack own units)
+- `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - request unit of id: `<id>` to move to field of coordinates: `<x><y>`
+- `a` `<id1>` ` ` `<id2>` `\n` - request unit of id: `<id1>` to attack another unit (of id: `<id2>`) (possible to attack own units)
 - `d` `<id>` `\n` - request unit to mine the resource (`<id>` is an id of the controlled unit) (unit can only mine resource that it is standing on)
 
 ### From server
 
-- `c` `<millis>` ` ` `<maxPlayers>` ` ` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` ` ` `<startResources>` ` ` `<resourceHp>` ` ` `<unitHp>` ` ` `<unitDamage>` ` ` `<allowedNameCharacters>` `\n` - whole server configuration sent to newly joined clients
+- `c` `<millis>` ` ` `<maxPlayers>` ` ` `<boardX>` ` ` `<boardY>` ` ` `<unitsToWin>` ` ` `<startResources>` ` ` `<resourceHp>` ` ` `<unitHp>` ` ` `<unitDamage>` ` ` `<allowedNameCharacters>` `\n` - almost whole server configuration sent to newly joined clients
 - `j` `<player name>` `\n` - new player has joined the game room
 - `l` `<player name>` `\n` - player `<player name>` has either left or lost the game
 - `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - unit of id `<id>` has moved to `<x>;<y>`
@@ -134,5 +134,5 @@ Numbers are represented as strings of characters (97 ---> "97" not 'a').
 **6:** client can send multiple: `m` `a` `d` messages   
 **6:** if client sends `q` => go to step **4**  
 **6:** if server sends `W` or `L` => go to step **4**  
-**6:** if server sends `l` with clients name => go to step **4**  
+**6:** if server sends `l` with client's name => go to step **4**  
 **7:** server sends `t` => go to step **6**  
