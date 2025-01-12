@@ -17,6 +17,7 @@ rts::unit::unit(player* owner_, field* field_, unsigned int id_) :
     printf("%s got new unit\n", owner->getName().c_str());
     assert(f->empty());
     f->_unit = this;
+    owner_->getGame()->unitsById.insert({id, this});
 }
 
 void rts::unit::mine(){
@@ -81,4 +82,5 @@ void rts::unit::recvDamage(unsigned int dmg){
 rts::unit::~unit() {
     printf("%s lost a unit\n", owner->getName().c_str());
     f->_unit = nullptr;
+    owner->getGame()->unitsById.erase(id);
 }

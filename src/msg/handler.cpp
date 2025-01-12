@@ -119,14 +119,12 @@ void message::handler::init(){
     };
 
     messageProcessors['a'] = [](message::handler* mh){
-        int sx, sy, dx, dy;
+        int si, ti;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetInt(sx, it, ' ');
-        if (success) success &= mh->tryGetInt(sy, it, ' ');
-        if (success) success &= mh->tryGetInt(dx, it, ' ');
-        if (success) success &= mh->tryGetInt(dy, it, '\n');
+        bool success = mh->tryGetInt(si, it, ' ');
+        if (success) success &= mh->tryGetInt(ti, it, '\n');
         if (success) {
-            message::attack msg(dx, dy, sx, sy);
+            message::attackById msg(ti, si);
             mh->onNewMessage(&msg);
             mh->buffer.erase(mh->buffer.begin(), it);
             mh->msgType = '?';

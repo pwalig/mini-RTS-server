@@ -53,6 +53,14 @@ void rts::player::handleNewMessage(const message::base* msg) {
             }
         }
     }
+    else if (const message::attackById* cmsg = dynamic_cast<const message::attackById*>(msg)) {
+        if (unit* u = cmsg->getUnit(_game)) {
+            if(_game->unitsById.find(cmsg->destId) != _game->unitsById.end()) {
+                unit* t = _game->unitsById.at(cmsg->destId);
+                if (u->owner == this) u->attack(t);
+            }
+        }
+    }
     else if (const message::mine* cmsg = dynamic_cast<const message::mine*>(msg)) {
         if (unit* u = cmsg->getUnit(_game)) {
             if (u->owner == this) u->mine();

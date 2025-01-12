@@ -27,6 +27,6 @@ namespace message {
         const unsigned int unitId;
         
         addressUnitById(unsigned int id);
-        // rts::unit* getUnit(const rts::game* g) const override; ... TO DO ...
+        rts::unit* getUnit(const rts::game* g) const override;
     };
 }
