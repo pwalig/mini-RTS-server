@@ -9,6 +9,7 @@ namespace rts {
         const unsigned int id;
         unsigned int hp;
         field* f;
+        field* lastField;
         player* const owner;
         bool movedThisRound = false;
 

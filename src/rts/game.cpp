@@ -132,6 +132,7 @@ void rts::game::loopLogic(){
     for (player* p : activePlayers) {
         for (unit* u : p->units){
             u->movedThisRound = false;
+            u->lastField = u->f;
         }
     }
 
