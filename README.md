@@ -80,16 +80,16 @@ Some messages consist of only type character others contain more data.
 - `j` `<player name>` `\n` - new player has joined the game room
 - `l` `<player name>` `\n` - player `<player name>` has either left or lost the game
 - `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - unit of id `<id>` has moved to `<x>;<y>`
-- `a` `<id1>` ` ` `<id2>` `\n` - unit of id `<id1>` attacked unit of id `<id2>`
-- `d` `<id>` `\n` - unit of id `<id>` mined a resource
+- `a` `<id1>` ` ` `<id2>` ` ` `<hp>` `\n` - unit of id `<id1>` attacked unit of id `<id2>` and target unit has now `<hp>` hp left
+- `d` `<id>` ` ` `<hp>` `\n` - unit of id `<id>` mined a resource and resource has now `<hp>` hp left
 - `u` `<player name>` ` ` `<id>` ` ` `<x>` ` ` `<y>` - player `<player name>` has aquired unit of id `<id>` on field `<x>;<y>`
 - `f` `<x>` ` ` `<y>` ` ` `<hp>` `\n` - new resource spawned on field `<x>;<y>`
 - `t` `\n` - sent to all players in game room in regular time intervals, marks the and of each tick and a start of the next one
 - `q` `\n` - player was sent to queue (in response to: `j`)
 - `y` `\n` - client request accepted (in response to: `n`)
 - `n` `\n` - client request denied (in response to: `j` or `n`)
-- `L` `\n` - client lost the game (and was moved out of game room)
-- `W` `\n` - client won the game (and was moved out of game room)
+- `L` `<name>` `\n` - client lost the game (and was moved out of game room), `<name>` is the name of the player who won
+- `W` `<name>` `\n` - client won the game (and was moved out of game room), `<name>` is the name of the player who won
  
 ### Board state message
 

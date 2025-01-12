@@ -237,15 +237,20 @@ void rts::game::deletePlayer(player* pl){
 void rts::game::playerLostAllUnits(player* pl) {
     assert(pl);
     assert(activePlayers.find(pl) != activePlayers.end());
-    pl->getClient()->sendToClient({'L','\n'});
+    std::vector<char> buff = {'l'};
+    message::appendStringWDelim(buff, pl->getName(), '\n');
+    pl->getClient()->sendToClient(buff);
     removePlayerFromRoomOrQueue(pl);
 }
 
 void rts::game::tryWin(player* pl){
     if (pl->units.size() >= unitsToWin) {
-        pl->getClient()->sendToClient({'W','\n'});
+        std::vector<char> buff = {'W'};
+        message::appendStringWDelim(buff, pl->getName(), '\n');
+        pl->getClient()->sendToClient(buff);
+        buff[0] = 'L';
         for (player* p : activePlayers){
-            if (p != pl) p->getClient()->sendToClient({'L','\n'});
+            if (p != pl) p->getClient()->sendToClient(buff);
         }
 
         clearRoom();

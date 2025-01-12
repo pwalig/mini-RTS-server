@@ -22,12 +22,13 @@ rts::unit::unit(player* owner_, field* field_, unsigned int id_) :
 
 void rts::unit::mine(){
     if (!movedThisRound && f->hasResource()) {
+        f->mine(owner->getGame()->getUnitDamage());
 
         std::vector<char> buff = {'d'};
-        message::appendNumberWDelim(buff, id, '\n');
+        message::appendNumberWDelim(buff, id, ' ');
+        message::appendNumberWDelim(buff, f->getHp(), '\n');
         owner->getGame()->sendToPlayers(buff);
 
-        f->mine(owner->getGame()->getUnitDamage());
         if (f->getHp() <= 0) {
             field* nf = owner->getGame()->_board.closestEmptyField(f);
             if (nf) owner->newUnit(nf);
@@ -57,7 +58,8 @@ void rts::unit::attack(unit* target){
 
         std::vector<char> buff = {'a'};
         message::appendNumberWDelim(buff, id, ' ');
-        message::appendNumberWDelim(buff, target->id, '\n');
+        message::appendNumberWDelim(buff, target->id, ' ');
+        message::appendNumberWDelim(buff, target->hp - owner->getGame()->getUnitDamage(), '\n');
         owner->getGame()->sendToPlayers(buff);
 
         target->recvDamage(owner->getGame()->getUnitDamage());
