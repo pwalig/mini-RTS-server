@@ -8,6 +8,7 @@
 
 namespace rts {
     class player;
+    class unit;
 
     class game {
     private:
@@ -48,6 +49,7 @@ namespace rts {
         static void sendToPlayers(const std::unordered_set<player*>& players, const std::vector<char>& message);
 
     public:
+        std::unordered_map<unsigned int, unit*> unitsById;
         board _board;
         
         game(const char *port, const char* configFile);

@@ -25,6 +25,15 @@ namespace message {
             ) : addressUnitByCoordinates(sx, sy), destX(dx), destY(dy) {}
     };
     
+    class attackById : public addressUnitById {
+        public:
+        const unsigned int destId;
+
+        attackById(
+            unsigned int destId, unsigned int sourceId
+            ) : addressUnitById(sourceId), destId(destId) {}
+    };
+    
     class mine : public addressUnitByCoordinates {
         public:
 

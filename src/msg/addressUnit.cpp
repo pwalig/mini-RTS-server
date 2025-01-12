@@ -15,3 +15,8 @@ rts::unit* message::addressUnitByCoordinates::getUnit(const rts::game* g) const{
 message::addressUnitById::addressUnitById(
     unsigned int id
     ) : addressUnit(), unitId(id) {}
+    
+rts::unit* message::addressUnitById::getUnit(const rts::game* g) const{
+    if (g->unitsById.find(unitId) == g->unitsById.end()) return nullptr;
+    return g->unitsById.at(unitId);
+}
