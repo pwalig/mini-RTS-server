@@ -11,7 +11,7 @@
 rts::unit::unit(player* owner_, field* field_, unsigned int id_) :
     id(id_),
     hp(owner_->getGame()->getUnitHp()),
-    f(field_),
+    f(field_), lastField(field_),
     owner(owner_)
 {
     printf("%s got new unit\n", owner->getName().c_str());
@@ -54,7 +54,7 @@ void rts::unit::move(field* field_){
 }
 void rts::unit::attack(unit* target){
     if (target == nullptr) return;
-    if (!movedThisRound && f->distance(*(target->f)) <= 1) {
+    if (!movedThisRound && (f->distance(*(target->f)) <= 1 || f->distance(*(target->lastField)) <= 1)) {
 
         std::vector<char> buff = {'a'};
         message::appendNumberWDelim(buff, id, ' ');

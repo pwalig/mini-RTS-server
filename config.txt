@@ -1,8 +1,8 @@
-millis 3000
+millis 10000
 maxPlayers 2
 unitsToWin 2
-startResources 8
-boardX 5
-boardY 5
+startResources 0
+boardX 2
+boardY 2
 resourceHp 20
 unitHp 20
