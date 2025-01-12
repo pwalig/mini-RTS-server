@@ -41,6 +41,8 @@ make
 * `unitHp` - starting hit points of every new unit [default: 100]
 * `unitDamage` - how much damage do units deal on every attack [default: 10]
 * `allowedNameCharacters` - string of characters that can be used in player names  [default: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_]
+* `maxResourceSpawn` - amount of times server will try to spawn a resource in one game tick / maximum amount of resources that can spawn in one tick [default: 1]
+* `resourceChance` - chance of resource spawning in one attempt [default: 0.1]
 
 ### Example:
 
@@ -54,6 +56,8 @@ boardY 5
 resourceHp 20
 unitHp 20
 unitDamage 5
+maxResourceSpawn 2
+resourceChance 0.2
 ```
 
 Pair can appear in any order. If pair not listed default value will be used.
@@ -70,9 +74,9 @@ Some messages consist of only type character others contain more data.
 - `n` `<name>` `\n` - set name or rename self
 - `j` - request join (player will be sent to game room or queue)
 - `q` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
-- `m` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` designate destination)
-- `a` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to attack another unit (`<x1><y1>` are coordinates of the unit, `<x2><y2>` coordinates of the target unit) (possible to attack own units)
-- `d` `<x1>` ` ` `<y1>` `\n` - request unit to mine the resource (`<x1><y1>` are coordinates of the unit) (unit can only mine resource that it is standing on)
+- `m` `<id>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit of id `<id>` to move to field of coordinates: `<x2><y2>`
+- `a` `<id1>` ` ` `<id1>` `\n` - request unit to attack another unit (`<id1>` is id of the controlled unit, `<id2>` id id of the target unit) (possible to attack own units)
+- `d` `<id>` `\n` - request unit to mine the resource (`<id>` is an id of the controlled unit) (unit can only mine resource that it is standing on)
 
 ### From server
 
@@ -80,16 +84,16 @@ Some messages consist of only type character others contain more data.
 - `j` `<player name>` `\n` - new player has joined the game room
 - `l` `<player name>` `\n` - player `<player name>` has either left or lost the game
 - `m` `<id>` ` ` `<x>` ` ` `<y>` `\n` - unit of id `<id>` has moved to `<x>;<y>`
-- `a` `<id1>` ` ` `<id2>` `\n` - unit of id `<id1>` attacked unit of id `<id2>`
-- `d` `<id>` `\n` - unit of id `<id>` mined a resource
+- `a` `<id1>` ` ` `<id2>` ` ` `<hp>` `\n` - unit of id `<id1>` attacked unit of id `<id2>` and target unit has now `<hp>` hp left
+- `d` `<id>` ` ` `<hp>` `\n` - unit of id `<id>` mined a resource and resource has now `<hp>` hp left
 - `u` `<player name>` ` ` `<id>` ` ` `<x>` ` ` `<y>` - player `<player name>` has aquired unit of id `<id>` on field `<x>;<y>`
 - `f` `<x>` ` ` `<y>` ` ` `<hp>` `\n` - new resource spawned on field `<x>;<y>`
 - `t` `\n` - sent to all players in game room in regular time intervals, marks the and of each tick and a start of the next one
 - `q` `\n` - player was sent to queue (in response to: `j`)
 - `y` `\n` - client request accepted (in response to: `n`)
 - `n` `\n` - client request denied (in response to: `j` or `n`)
-- `L` `\n` - client lost the game (and was moved out of game room)
-- `W` `\n` - client won the game (and was moved out of game room)
+- `L` `<name>` `\n` - client lost the game (and was moved out of game room), `<name>` is the name of the player who won
+- `W` `<name>` `\n` - client won the game (and was moved out of game room), `<name>` is the name of the player who won
  
 ### Board state message
 
@@ -130,4 +134,5 @@ Numbers are represented as strings of characters (97 ---> "97" not 'a').
 **6:** client can send multiple: `m` `a` `d` messages   
 **6:** if client sends `q` => go to step **4**  
 **6:** if server sends `W` or `L` => go to step **4**  
+**6:** if server sends `l` with clients name => go to step **4**  
 **7:** server sends `t` => go to step **6**  

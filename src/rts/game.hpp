@@ -8,6 +8,7 @@
 
 namespace rts {
     class player;
+    class unit;
 
     class game {
     private:
@@ -15,6 +16,7 @@ namespace rts {
         std::unordered_set<player*> allPlayers;
         std::unordered_set<player*> activePlayers;
         std::deque<player*> queuedPlayers;
+        std::mt19937 gen;
 
         unsigned int millis = 1000;
         unsigned int maxPlayers = 16;
@@ -25,6 +27,8 @@ namespace rts {
         unsigned int resourceHp = 100;
         unsigned int unitHp = 100;
         unsigned int unitDamage = 10;
+        unsigned int maxResourceSpawn = 1;
+        double resourceChance = 0.2;
         std::string allowedNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
 
         unsigned int nextUnitId = 0;
@@ -48,6 +52,7 @@ namespace rts {
         static void sendToPlayers(const std::unordered_set<player*>& players, const std::vector<char>& message);
 
     public:
+        std::unordered_map<unsigned int, unit*> unitsById;
         board _board;
         
         game(const char *port, const char* configFile);

@@ -18,10 +18,12 @@ std::unordered_map<std::string, std::function<void(rts::game*, std::ifstream&)>>
     {"resourceHp", [](rts::game* g, std::ifstream& f){ f >> g->resourceHp; }},
     {"unitHp", [](rts::game* g, std::ifstream& f){ f >> g->unitHp; }},
     {"unitDamage", [](rts::game* g, std::ifstream& f){ f >> g->unitDamage; }},
-    {"allowedNameCharacters", [](rts::game* g, std::ifstream& f){ f >> g->allowedNameCharacters; }}
+    {"allowedNameCharacters", [](rts::game* g, std::ifstream& f){ f >> g->allowedNameCharacters; }},
+    {"maxResourceSpawn", [](rts::game* g, std::ifstream& f){ f >> g->maxResourceSpawn; }},
+    {"resourceChance", [](rts::game* g, std::ifstream& f){ f >> g->resourceChance; }}
 }; // i wish there was reflection system in c++
 
-rts::game::game(const char *port, const char* configFile) : _server(port) {
+rts::game::game(const char *port, const char* configFile) : _server(port), gen(std::random_device()()) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
 
     if (configFile != nullptr) {
@@ -121,10 +123,13 @@ void rts::game::handleNewClient(client* client_) {
 
 void rts::game::loopLogic(){
     // spawn resource and inform players
-    if (rand() % 10 == 0) {
-        field* f = _board.spawnResource(resourceHp);
-        if (f) {
-            sendToPlayers(activePlayers, newResourceMessage(f));
+    std::uniform_real_distribution<double> distrib(0.0, 1.0);
+    for (unsigned int i = 0; i < maxResourceSpawn; ++i){
+        if (distrib(gen) < resourceChance){
+            field* f = _board.spawnResource(resourceHp);
+            if (f) {
+                sendToPlayers(activePlayers, newResourceMessage(f));
+            }
         }
     }
     
@@ -132,6 +137,7 @@ void rts::game::loopLogic(){
     for (player* p : activePlayers) {
         for (unit* u : p->units){
             u->movedThisRound = false;
+            u->lastField = u->f;
         }
     }
 
@@ -236,15 +242,20 @@ void rts::game::deletePlayer(player* pl){
 void rts::game::playerLostAllUnits(player* pl) {
     assert(pl);
     assert(activePlayers.find(pl) != activePlayers.end());
-    pl->getClient()->sendToClient({'L','\n'});
+    std::vector<char> buff = {'l'};
+    message::appendStringWDelim(buff, pl->getName(), '\n');
+    pl->getClient()->sendToClient(buff);
     removePlayerFromRoomOrQueue(pl);
 }
 
 void rts::game::tryWin(player* pl){
     if (pl->units.size() >= unitsToWin) {
-        pl->getClient()->sendToClient({'W','\n'});
+        std::vector<char> buff = {'W'};
+        message::appendStringWDelim(buff, pl->getName(), '\n');
+        pl->getClient()->sendToClient(buff);
+        buff[0] = 'L';
         for (player* p : activePlayers){
-            if (p != pl) p->getClient()->sendToClient({'L','\n'});
+            if (p != pl) p->getClient()->sendToClient(buff);
         }
 
         clearRoom();

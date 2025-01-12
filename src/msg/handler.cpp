@@ -104,42 +104,41 @@ void message::handler::init(){
     };
 
     messageProcessors['m'] = [](message::handler* mh){
-        int sx, sy, dx, dy;
+        int a, b, c;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetInt(sx, it, ' ');
-        if (success) success &= mh->tryGetInt(sy, it, ' ');
-        if (success) success &= mh->tryGetInt(dx, it, ' ');
-        if (success) success &= mh->tryGetInt(dy, it, '\n');
-        if (success) {
-            message::move msg(dx, dy, sx, sy);
-            mh->onNewMessage(&msg);
-            mh->buffer.erase(mh->buffer.begin(), it);
-            mh->msgType = '?';
+
+        if (mh->tryGetInt(a, it, ' ')){
+            if (mh->tryGetInt(b, it, ' ')){
+                if (mh->tryGetInt(c, it, '\n')) {
+                        message::move msg(a, b, c);
+                        mh->onNewMessage(&msg);
+                        mh->buffer.erase(mh->buffer.begin(), it);
+                        mh->msgType = '?';
+                }
+            }
         }
     };
 
     messageProcessors['a'] = [](message::handler* mh){
-        int sx, sy, dx, dy;
+        int a, b;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetInt(sx, it, ' ');
-        if (success) success &= mh->tryGetInt(sy, it, ' ');
-        if (success) success &= mh->tryGetInt(dx, it, ' ');
-        if (success) success &= mh->tryGetInt(dy, it, '\n');
-        if (success) {
-            message::attack msg(dx, dy, sx, sy);
-            mh->onNewMessage(&msg);
-            mh->buffer.erase(mh->buffer.begin(), it);
-            mh->msgType = '?';
+
+        if (mh->tryGetInt(a, it, ' ')){
+            if (mh->tryGetInt(b, it, '\n')){
+                message::attack msg(a, b);
+                mh->onNewMessage(&msg);
+                mh->buffer.erase(mh->buffer.begin(), it);
+                mh->msgType = '?';
+            }
         }
     };
 
     messageProcessors['d'] = [](message::handler* mh){
-        int sx, sy;
+        int a;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetInt(sx, it, ' ');
-        if (success) success &= mh->tryGetInt(sy, it, '\n');
-        if (success) {
-            message::mine msg(sx, sy);
+
+        if (mh->tryGetInt(a, it, '\n')){
+            message::mine msg(a);
             mh->onNewMessage(&msg);
             mh->buffer.erase(mh->buffer.begin(), it);
             mh->msgType = '?';
