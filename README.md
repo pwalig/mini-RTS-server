@@ -41,6 +41,8 @@ make
 * `unitHp` - starting hit points of every new unit [default: 100]
 * `unitDamage` - how much damage do units deal on every attack [default: 10]
 * `allowedNameCharacters` - string of characters that can be used in player names  [default: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_]
+* `maxResourceSpawn` - amount of times server will try to spawn a resource in one game tick / maximum amount of resources that can spawn in one tick [default: 1]
+* `resourceChance` - chance of resource spawning in one attempt [default: 0.1]
 
 ### Example:
 
@@ -54,6 +56,8 @@ boardY 5
 resourceHp 20
 unitHp 20
 unitDamage 5
+maxResourceSpawn 2
+resourceChance 0.2
 ```
 
 Pair can appear in any order. If pair not listed default value will be used.
