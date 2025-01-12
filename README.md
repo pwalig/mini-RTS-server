@@ -70,9 +70,9 @@ Some messages consist of only type character others contain more data.
 - `n` `<name>` `\n` - set name or rename self
 - `j` - request join (player will be sent to game room or queue)
 - `q` - request quit (player will be removed from game room or queue, can still rejoin with `j`)
-- `m` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to move (`<x1><y1>` are coordinates of the unit, `<x2><y2>` designate destination)
-- `a` `<x1>` ` ` `<y1>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit to attack another unit (`<x1><y1>` are coordinates of the unit, `<x2><y2>` coordinates of the target unit) (possible to attack own units)
-- `d` `<x1>` ` ` `<y1>` `\n` - request unit to mine the resource (`<x1><y1>` are coordinates of the unit) (unit can only mine resource that it is standing on)
+- `m` `<id>` ` ` `<x2>` ` ` `<y2>` `\n` - request unit of id `<id>` to move to field of coordinates: `<x2><y2>`
+- `a` `<id1>` ` ` `<id1>` `\n` - request unit to attack another unit (`<id1>` is id of the controlled unit, `<id2>` id id of the target unit) (possible to attack own units)
+- `d` `<id>` `\n` - request unit to mine the resource (`<id>` is an id of the controlled unit) (unit can only mine resource that it is standing on)
 
 ### From server
 
@@ -130,4 +130,5 @@ Numbers are represented as strings of characters (97 ---> "97" not 'a').
 **6:** client can send multiple: `m` `a` `d` messages   
 **6:** if client sends `q` => go to step **4**  
 **6:** if server sends `W` or `L` => go to step **4**  
+**6:** if server sends `l` with clients name => go to step **4**  
 **7:** server sends `t` => go to step **6**  
