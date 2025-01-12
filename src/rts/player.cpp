@@ -39,31 +39,20 @@ void rts::player::handleNewMessage(const message::base* msg) {
             _game->removePlayerFromRoomOrQueue(this);
         }
     }
-    else if (const message::move* cmsg = dynamic_cast<const message::move*>(msg)) {
-        if (unit* u = cmsg->getUnit(_game)) {
-            if (field* f = _game->_board.getField(cmsg->destX, cmsg->destY)){
-                if (u->owner == this) u->move(f);
+    else if (const message::command* cmsg = dynamic_cast<const message::command*>(msg)) {
+        if (unit* u = cmsg->getUnit(_game)){
+            if (u->owner == this) {
+
+                if (const message::move* mmsg = dynamic_cast<const message::move*>(cmsg)) {
+                    if (field* f = mmsg->getDestinationField(_game)) u->move(f);
+                }
+                else if (const message::attack* amsg = dynamic_cast<const message::attack*>(cmsg)) {
+                    if (unit* t = amsg->getTarget(_game)) u->attack(t);
+                }
+                else if (dynamic_cast<const message::mine*>(cmsg)) {
+                    u->mine();
+                }
             }
-        }
-    }
-    else if (const message::attack* cmsg = dynamic_cast<const message::attack*>(msg)) {
-        if (unit* u = cmsg->getUnit(_game)) {
-            if (field* f = _game->_board.getField(cmsg->destX, cmsg->destY)) {
-                if (u->owner == this) u->attack(f->_unit);
-            }
-        }
-    }
-    else if (const message::attackById* cmsg = dynamic_cast<const message::attackById*>(msg)) {
-        if (unit* u = cmsg->getUnit(_game)) {
-            if(_game->unitsById.find(cmsg->destId) != _game->unitsById.end()) {
-                unit* t = _game->unitsById.at(cmsg->destId);
-                if (u->owner == this) u->attack(t);
-            }
-        }
-    }
-    else if (const message::mine* cmsg = dynamic_cast<const message::mine*>(msg)) {
-        if (unit* u = cmsg->getUnit(_game)) {
-            if (u->owner == this) u->mine();
         }
     }
 }

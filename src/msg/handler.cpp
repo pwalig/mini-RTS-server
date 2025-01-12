@@ -104,40 +104,79 @@ void message::handler::init(){
     };
 
     messageProcessors['m'] = [](message::handler* mh){
-        int sx, sy, dx, dy;
+        int a, b, c, d;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetInt(sx, it, ' ');
-        if (success) success &= mh->tryGetInt(sy, it, ' ');
-        if (success) success &= mh->tryGetInt(dx, it, ' ');
-        if (success) success &= mh->tryGetInt(dy, it, '\n');
-        if (success) {
-            message::move msg(dx, dy, sx, sy);
-            mh->onNewMessage(&msg);
-            mh->buffer.erase(mh->buffer.begin(), it);
-            mh->msgType = '?';
+        bool coordSourced = (mh->buffer[0] == 'c');
+        if (coordSourced) ++it;
+
+        if (mh->tryGetInt(a, it, ' ')){
+            if (mh->tryGetInt(b, it, ' ')){
+                if (coordSourced){
+                    if (mh->tryGetInt(c, it, ' ')){
+                        if (mh->tryGetInt(d, it, '\n')){
+                            message::move msg(a, b, c, d);
+                            mh->onNewMessage(&msg);
+                            mh->buffer.erase(mh->buffer.begin(), it);
+                            mh->msgType = '?';
+                        }
+                    }
+                }
+                else if (mh->tryGetInt(c, it, '\n')) {
+                        message::move msg(a, b, c);
+                        mh->onNewMessage(&msg);
+                        mh->buffer.erase(mh->buffer.begin(), it);
+                        mh->msgType = '?';
+                }
+            }
         }
     };
 
     messageProcessors['a'] = [](message::handler* mh){
-        int si, ti;
+        int a, b, c, d;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetInt(si, it, ' ');
-        if (success) success &= mh->tryGetInt(ti, it, '\n');
-        if (success) {
-            message::attackById msg(ti, si);
-            mh->onNewMessage(&msg);
-            mh->buffer.erase(mh->buffer.begin(), it);
-            mh->msgType = '?';
+        bool coordSourced = (mh->buffer[0] == 'c');
+        if (coordSourced) ++it;
+
+        if (mh->tryGetInt(a, it, ' ')){
+            if (coordSourced){
+                if (mh->tryGetInt(b, it, ' ')){
+                    if (mh->tryGetInt(c, it, ' ')){
+                        if (mh->tryGetInt(d, it, '\n')){
+                            message::attack msg(a, b, c, d);
+                            mh->onNewMessage(&msg);
+                            mh->buffer.erase(mh->buffer.begin(), it);
+                            mh->msgType = '?';
+                        }
+                    }
+                }
+            }
+            else if (mh->tryGetInt(b, it, '\n')){
+                message::attack msg(a, b);
+                mh->onNewMessage(&msg);
+                mh->buffer.erase(mh->buffer.begin(), it);
+                mh->msgType = '?';
+            }
         }
     };
 
     messageProcessors['d'] = [](message::handler* mh){
-        int sx, sy;
+        int a, b;
         auto it = mh->buffer.begin();
-        bool success = mh->tryGetInt(sx, it, ' ');
-        if (success) success &= mh->tryGetInt(sy, it, '\n');
-        if (success) {
-            message::mine msg(sx, sy);
+        bool coordSourced = (mh->buffer[0] == 'c');
+        if (coordSourced) ++it;
+
+        if (coordSourced){
+            if (mh->tryGetInt(a, it, ' ')){
+                if (mh->tryGetInt(b, it, '\n')){
+                    message::mine msg(a, b);
+                    mh->onNewMessage(&msg);
+                    mh->buffer.erase(mh->buffer.begin(), it);
+                    mh->msgType = '?';
+                }
+            } 
+        }
+        else if (mh->tryGetInt(a, it, '\n')){
+            message::mine msg(a);
             mh->onNewMessage(&msg);
             mh->buffer.erase(mh->buffer.begin(), it);
             mh->msgType = '?';

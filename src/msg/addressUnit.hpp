@@ -9,9 +9,10 @@ namespace rts {
 
 namespace message {
 
-    class addressUnit : public base {
+    class addressUnit {
     public:
         virtual rts::unit* getUnit(const rts::game* g) const = 0;
+        virtual ~addressUnit() = default;
     };
 
     class addressUnitByCoordinates : public addressUnit {
