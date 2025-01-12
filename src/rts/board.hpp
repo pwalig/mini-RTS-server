@@ -9,7 +9,7 @@ namespace rts {
     class board {
         std::vector<std::vector<field>> fields;
 
-        std::mt19937 gen; // mersenne_twister_engine seeded with rd()
+        std::mt19937 gen;
 
         public:
         board(unsigned int x = 256, unsigned int y = 256);

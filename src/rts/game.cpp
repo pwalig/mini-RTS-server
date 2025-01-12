@@ -18,10 +18,12 @@ std::unordered_map<std::string, std::function<void(rts::game*, std::ifstream&)>>
     {"resourceHp", [](rts::game* g, std::ifstream& f){ f >> g->resourceHp; }},
     {"unitHp", [](rts::game* g, std::ifstream& f){ f >> g->unitHp; }},
     {"unitDamage", [](rts::game* g, std::ifstream& f){ f >> g->unitDamage; }},
-    {"allowedNameCharacters", [](rts::game* g, std::ifstream& f){ f >> g->allowedNameCharacters; }}
+    {"allowedNameCharacters", [](rts::game* g, std::ifstream& f){ f >> g->allowedNameCharacters; }},
+    {"maxResourceSpawn", [](rts::game* g, std::ifstream& f){ f >> g->maxResourceSpawn; }},
+    {"resourceChance", [](rts::game* g, std::ifstream& f){ f >> g->resourceChance; }}
 }; // i wish there was reflection system in c++
 
-rts::game::game(const char *port, const char* configFile) : _server(port) {
+rts::game::game(const char *port, const char* configFile) : _server(port), gen(std::random_device()()) {
     _server.onNewClient = std::bind(&rts::game::handleNewClient, this, std::placeholders::_1);
 
     if (configFile != nullptr) {
@@ -121,10 +123,13 @@ void rts::game::handleNewClient(client* client_) {
 
 void rts::game::loopLogic(){
     // spawn resource and inform players
-    if (rand() % 10 == 0) {
-        field* f = _board.spawnResource(resourceHp);
-        if (f) {
-            sendToPlayers(activePlayers, newResourceMessage(f));
+    std::uniform_real_distribution<double> distrib(0.0, 1.0);
+    for (unsigned int i = 0; i < maxResourceSpawn; ++i){
+        if (distrib(gen) < resourceChance){
+            field* f = _board.spawnResource(resourceHp);
+            if (f) {
+                sendToPlayers(activePlayers, newResourceMessage(f));
+            }
         }
     }
     

@@ -16,6 +16,7 @@ namespace rts {
         std::unordered_set<player*> allPlayers;
         std::unordered_set<player*> activePlayers;
         std::deque<player*> queuedPlayers;
+        std::mt19937 gen;
 
         unsigned int millis = 1000;
         unsigned int maxPlayers = 16;
@@ -26,6 +27,8 @@ namespace rts {
         unsigned int resourceHp = 100;
         unsigned int unitHp = 100;
         unsigned int unitDamage = 10;
+        unsigned int maxResourceSpawn = 1;
+        double resourceChance = 0.2;
         std::string allowedNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
 
         unsigned int nextUnitId = 0;
