@@ -136,3 +136,9 @@ Numbers are represented as strings of characters (97 ---> "97" not 'a').
 **6:** if server sends `W` or `L` => go to step **4**  
 **6:** if server sends `l` with client's name => go to step **4**  
 **7:** server sends `t` => go to step **6**  
+
+# Available Clients:
+
+- [Godot client](https://github.com/pwalig/mini-RTS-godot-client)
+
+feel free to write your own clients
