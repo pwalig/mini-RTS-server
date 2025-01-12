@@ -15,6 +15,13 @@ namespace message {
         command(unsigned int sourceId);
         command(unsigned int sourceX, unsigned int sourceY);
 
+        // prevent copying and moving because of the need to manage addressUnit* source pointer
+        // copying and moving could be implemented but there is no need for it anywhere in the codebase
+        command(const command& other) = delete;
+        command(command&& other) = delete;
+        command& operator=(const command& other) = delete;
+        command& operator=(command&& other) = delete;
+
         ~command();
     };
 
