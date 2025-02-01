@@ -140,5 +140,6 @@ Numbers are represented as strings of characters (97 ---> "97" not 'a').
 # Available Clients:
 
 - [Godot client](https://github.com/pwalig/mini-RTS-godot-client)
+- [Zig Bot](https://github.com/pwalig/mini-RTS-zig-bot)
 
 feel free to write your own clients
