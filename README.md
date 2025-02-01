@@ -64,7 +64,7 @@ Pair can appear in any order. If pair not listed default value will be used.
 
 # Comunicating with server
 
-Each message must start with one byte that designates the type of the message.
+Communication happens via TCP protocol. Messages are separated by `\n` character. Each message must start with one byte that designates the type of the message.
 Some messages consist of only type character others contain more data.
 
 ## Message types
