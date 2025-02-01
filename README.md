@@ -21,6 +21,16 @@ for example
 make
 ```
 
+# Building with Zig
+
+Project can also be built with [zig](https://ziglang.org/)
+
+```
+zig build
+```
+
+> zig c++ compiler produces much smaller executable
+
 # Running server
 
 `./mini-rts-server <port> [config file]`
