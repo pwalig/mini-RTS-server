@@ -2,7 +2,7 @@
 
 server for minimalistic RTS game
 
-**server is linux only** can only be compiled for linux and will only runon linux
+**server is linux only**, can only be compiled for linux and will only run on linux
 
 # Building with CMake
 
