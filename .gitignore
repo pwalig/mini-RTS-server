@@ -3,3 +3,4 @@ build/
 config.txt
 
 .zig-cache/
+zig-out/
