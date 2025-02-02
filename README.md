@@ -31,13 +31,13 @@ zig build
 
 > zig c++ compiler produces much smaller executable
 
-If you are on other system than linux, then you can cross compile mini-RTS-server to linux (since server is **linux only**).
+Command above will target the native system. If you are on other system than linux, then you can cross compile mini-RTS-server to linux (since server is **linux only**).
 ```
 zig build -Dtarget=x86_64-linux
 ```
 You can replace `x86_64` with your cpu architecture if you happen to have a different one.
 
-You will find the executable in `zig-out/bin/` directory
+You will find the executable in `zig-out/bin/` directory.
 
 # Running server
 
