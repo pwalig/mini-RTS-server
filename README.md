@@ -37,6 +37,8 @@ zig build -Dtarget=x86_64-linux
 ```
 You can replace `x86_64` with your cpu architecture if you happen to have a different one.
 
+You will find the executable in `zig-out/bin/` directory
+
 # Running server
 
 `./mini-rts-server <port> [config file]`
